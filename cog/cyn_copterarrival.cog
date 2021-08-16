@@ -1,0 +1,183 @@
+# Jones 3D Cog Script
+#
+# CYN_Coptor_Arrival.cog
+#
+# the helicoptor with sophia arrives upon picking up the clay shard
+#
+# [CMG & revised by HB]
+#
+# (C) 1999 LucasArts Entertainment Co. All Rights Reserved
+# ==============================================================================
+
+symbols
+
+# .................................. MESSAGES ..................................
+
+	message		startup
+    message		entered
+
+# .................................. KEYFRAMES .................................
+	           
+    keyframe	in_examine=0in_examobj_1_1.key		local # 117x   
+    keyframe	in_lookup=0in_stand7.key   			local
+    keyframe	in_takeit=in_activate_low.key   	local # 83x
+	keyframe	in_wheregoodstuff=0in_crownsofkings_1_1.key	local # 144x
+
+	keyframe	chopFly=cyn_chopr_fly.key			local
+
+# .................................. MODELS ....................................
+	
+	model		chop_blad=cyn_chopr_blade.3do		local
+	model		chop_rot=cyn_chopr_rotor.3do		local
+	model		shardhand=hand_in_potshard.3do		local
+	
+# .................................. SOUNDS ....................................
+
+	sound		in_funnyspot=Cn01j02.wav			local	# funny how I didn't spot this...
+	sound		in_ifprize=Cn01j03.wav				local	# if this is the prize...
+	sound		in_artifacts=Cn01j04.wav			local	# where are the...artifacts?
+	sound		in_goodnews=Cn01j05.wav				local	# Good news never travels...fast
+	
+	sound		helirun=helicopter_rev2.wav			local
+	sound		scene_start=mus_gen_awechord2.wav	local
+# ............................... ACTOR THINGS .................................
+
+    thing		player								local
+    thing		indyActor							nolink
+    thing		helicopter							nolink		
+    thing		bird1										
+    thing		bird2										
+    
+# .............................. OBJECT THINGS .................................
+
+    thing		shard								nolink        
+	thing		ruins								nolink
+	thing		rope_1								nolink
+	thing		rope_2								nolink
+    thing		campsite_helicopter					nolink
+
+# .............................. CAMERA THINGS .................................
+
+	thing		cam_11								nolink
+	thing		cam_12								nolink
+	thing		cam_13								nolink
+	thing		cam_14								nolink
+	thing		cam_15								nolink
+	thing		cam_16								nolink
+	thing		cam_17								nolink
+	
+	thing		ct_11								nolink
+	thing		ct_12								nolink
+	thing		ct_13								nolink
+	thing		ct_14								nolink
+	thing		ct_15								nolink
+
+# .............................. TARGET THINGS .................................
+
+	thing		in_mk_11							nolink
+	thing		in_mk_12							nolink
+	thing		in_mk_13							nolink
+		
+	thing		copt_LookTarget1					nolink
+	thing		copt_LookTarget2					nolink
+	thing		copt_LookTarget3					nolink
+	
+	thing		copt_Target1						nolink
+	thing		copt_Target2						nolink
+	
+# ........................ OTHER ENGINE REFERENCES .............................
+
+#	surface		shardsurf
+	surface		startsurf							linkID=2
+	surface		startsurf0							linkID=2
+	surface		startsurf1							linkID=2
+
+# ............................... VARIABLES ....................................
+
+	int			cutSceneState=0						local
+	
+	int			in_keyTrack							local
+	
+	int			copterSound							local
+	
+	int			in_swapref							local
+	
+	int			ru_colltype							local
+	int			r1_colltype							local
+	int			r2_colltype							local
+	
+	int			curcam								local
+	int			cursound							local
+
+end
+
+# ==============================================================================
+
+code
+
+#...............................................................................
+
+startup:
+
+    player = GetLocalPlayerThing();
+	SetThingFlags(helicopter, 0x80000);
+	ru_colltype = GetCollideType(ruins);
+	r1_colltype = GetCollideType(rope_1);
+	r2_colltype = GetCollideType(rope_2);
+
+    return;
+
+#...............................................................................              
+
+entered:
+
+	if (cutSceneState != 0) return;
+	
+	if (GetSenderID() != 2) return;
+
+    	# Prep...
+	cutSceneState = 1;
+    	curcam = GetCurrentCamera();
+
+	# Disable controls, stop player and put away weapon
+	if(MakeMeStop() == -1) return;
+	DeselectWeaponWait(player);
+    	StartCutscene(1); # fade
+    
+	#SetThingFlags(player, 0x80000);
+	#ClearThingFlags(indyActor, 0x80000);
+	#SetThingFlags(indyActor, 0x10); # present but invisible
+	#TeleportThing(indyActor, in_mk_11);
+
+	# Get rid of the shard...
+   	DestroyThing(shard);
+    	in_swapref = SetThingMesh(indyActor, 15, shardhand, 0);
+
+	# restore the birds
+    	ClearThingFlags(bird1, 0x10);
+    	ClearThingFlags(bird2, 0x10);
+
+	# Clean up and restore player control...
+	TeleportThing(player, indyactor);
+	SetThingFlags(indyActor, 0x80000);
+	ClearThingFlags(player, 0x80000);
+
+	SetCameraPosition(1, GetThingPos(cam_17));
+	SetCurrentCamera(curcam);
+
+	SetThingAlpha(player, 1);
+
+	DestroyThing(helicopter);
+	SetCollideType(ruins, ru_colltype);
+ 	SetCollideType(rope_1, r1_colltype);
+	SetCollideType(rope_2, r2_colltype);
+
+	EndCutScene();
+	ClearActorFlags(player, 0x200000);
+
+	# Now the helicopter is up at the campsite...
+	ClearThingFlags(campsite_helicopter, 0x80000);
+
+	return;
+
+end

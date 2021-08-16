@@ -1,0 +1,127 @@
+# Jones 3D Cog Script
+#
+# SHS_Intro.cog
+#
+#	[JWC]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ========================================================================================
+
+symbols
+
+	message     startup
+	message     user0
+    message		pulse
+
+	template 	particle
+
+    thing		player					local
+   	thing       intro_indy
+    
+	thing       cam1
+	thing		cam1_target1
+    thing       cam1_target2
+	thing		cam2
+	thing		cam2_target1
+	thing		fader
+
+	thing		door0
+	thing		door1
+	thing		snowobj0
+	thing		snowobj1
+
+    sound		music0=mus_shs_intro.wav		local
+    sound   	doormove=shs_door_double.wav	local
+	sound   	doorstop=shs_door_double_stop.wav	local
+	
+    int			bSeen=0					local
+
+	vector		camVec					local
+
+end
+
+# ========================================================================================
+
+code
+
+startup:
+	
+	SetMasterCog(GetSelfCog()); # RT: Set master cog so we get autosave/restore message
+
+	Sleep(0.001); # Let engine get set up
+
+	if (bSeen) return; # new HB
+
+	# Start on black...
+	SetCameraFocus(2, cam1);
+	SetCameraSecondaryFocus(2, cam1_target1);
+	SetCameraPosInterp(2, 0);
+	SetCameraLookInterp(2, 0);
+	SetCurrentCamera(2);
+	SetCameraFOV(94, 0, 0.0);
+
+	return;
+
+# ..............................................................................
+
+user0: # RT: Indicates that autosave/restore has completed...
+
+	if (bSeen) return; # RT
+	bSeen = 1;
+
+#   if you're going to switch the camera to start your level cutscene, do it first before anything else!
+	
+
+#   cutscene camera is set up and set as current, now sleep for 0.01 to let the engine generate a frame
+    sleep(0.01);
+
+#	then you can do the rest of the stuff you need to start your cutscene.
+#   IMPORTANT! -- don't do a StartCutscene() until after the new camera is set and has had a chance
+#   to render a frame! 
+
+	player = GetLocalPlayerThing();
+	StartCutscene(2);
+	
+	
+	# Show Indy
+	SetThingFlags(player, 0x80000);			# hide him
+	SetActorFlags(player, 0x200000);		# paralyze him
+	ClearThingFlags(intro_indy, 0x80000);	# reveal our actor
+
+	# Make it snow
+	Setpulse(.5);
+
+	# Music
+	PlaySoundLocal(music0, 1.0, 0.0, 0x0, 0);						
+
+
+	# Stop Snow
+	SetPulse(0);
+   
+	# Return Control
+	SetThingFlags(intro_indy, 0x80000);	# make actor invisible
+	ClearThingFlags(player, 0x80000);	# bring player back
+	ClearActorFlags(player, 0x200000);
+
+    ResetCameraFOV(0, 0.0);
+	SetCameraLookInterp(2, 0); # kill pan & tilt mode
+	SetCameraPosInterp(2, 0); # kill dolly mode
+	Sleep(0.01);
+	SetCameraPosition(1, camVec);	 
+    SetCurrentCamera(1);
+	EndCutscene();
+    
+	return;
+
+# ..............................................................................
+
+pulse:
+	
+	CreateThing(particle, snowobj0);
+	CreateThing(particle, snowobj1);
+    return;
+  
+end
+
+

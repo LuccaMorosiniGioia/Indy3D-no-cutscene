@@ -1,0 +1,101 @@
+# Jones 3D Cog Script
+#
+# 01_BAB_Enter_Archive.cog
+#
+# Indy discovers the Archive room and marvels
+#
+# [HB]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ==============================================================================
+
+symbols
+
+# .................................. MESSAGES ..................................
+
+	message		startup
+	message		entered	
+	
+# .................................. KEYFRAMES .................................
+	
+	keyframe	in_handsONhips=0in_stand4.key			local
+	keyframe	in_handsTOhips=0in_stand1_bd_4.key	   	local # 26x
+	keyframe	in_ltarmup=0in_leftarm_1_1.key			local
+	keyframe	in_botharmsup=0in_armsup_1_1.key		local
+		
+# .................................. MODELS ....................................
+
+
+# .................................. SOUNDS ....................................
+
+	sound		in_neblibrary=Bb07j01.wav				local # "...Shh, don't disturb..."
+	
+# ............................... ACTOR THINGS .................................
+
+	thing		player									local
+	thing		arc_indy
+ 	
+# .............................. OBJECT THINGS .................................
+
+
+# .............................. CAMERA THINGS .................................
+
+	thing		arc_cam_1								nolink
+		
+	thing		arc_ct_1								nolink
+	thing		arc_ct_2								nolink
+
+	
+# .............................. TARGET THINGS .................................
+
+	thing		arc_mk_1								nolink
+	thing		arc_mk_2								nolink
+
+# ........................ OTHER ENGINE REFERENCES .............................
+
+	sector		startsector
+
+	template    ghost_tpl=ghost							local
+	
+# ............................... VARIABLES ....................................
+	
+	vector		v_targetpos								local
+
+	int			cutSceneState=0							local
+
+	int			in_keyTrack1							local
+
+	int			cursound								local
+	int			curcam									local
+	
+end
+
+# ==============================================================================
+
+code
+
+# ..............................................................................
+
+startup:
+
+	# Prepare for much later...
+	SetThingFlags(arc_indy, 0x80000);
+	cutSceneState = 0;
+
+	return;
+
+# ..............................................................................
+
+entered:
+
+	if (cutSceneState != 0)
+	{
+		# Only run cutscene once...
+		return;
+	}
+
+
+	return;
+
+end

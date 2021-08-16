@@ -1,0 +1,90 @@
+# Jones 3D Cog Script
+#
+# shs_Intro_Ice.cog   Intro the ice chickens.  
+#
+# [JWC]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ========================================================================================
+
+symbols
+
+message 	startup
+message 	entered
+
+sector		music
+
+sound 		music0=mus_gen_eerie1.wav				local
+sound		in_whatname=Ss08j01.wav					local
+
+surface 	trigger
+
+thing   	in_mk1   
+thing		player			local
+thing   	IceCam
+thing		IceCam_t1
+thing		IceCam_t2
+thing 		dummycam 
+thing		icechicken
+
+cog			chickenCutsceneCog
+
+int			curCam			local
+int			filter=0		local
+int			played=0		local
+int			in_track0		local
+
+end
+
+# ========================================================================================
+
+code
+
+startup:
+	
+      	
+	player = GetLocalPlayerThing();
+    return;
+
+	
+entered:
+	
+	if ((GetSenderRef() == trigger) && (filter == 0)) 
+	{
+		Print("Entered");
+    	        
+								
+		filter=1; 	# play only once
+		
+		AttachThingToThing(icecam_t1, icechicken);
+		SendMessage(chickenCutsceneCog, user0);		// Make the ice chicken detach and fall.
+       
+		Sleep(0.5);
+		DetachThing(icecam_t1);
+		SendMessage(chickenCutsceneCog, user1);		// Make the Ice chicken roll away.
+		
+		# "What in the name..."
+		PlayVoice(player, in_whatname, 1.0, 1);
+        
+		
+		# Return control
+		
+	}
+	# Some eerie music...
+	
+	if ((GetSenderRef() == music) && (played == 0))
+	{
+		played=1;
+        PlaySoundLocal(music0, 1.0, 0.0, 0x0, 0);
+    }
+
+return;
+     
+  
+
+end
+
+
+
+

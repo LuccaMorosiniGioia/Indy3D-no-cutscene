@@ -1,0 +1,75 @@
+# Jones 3D Cog Script
+#
+# shs_Dlog_religion.cog   Say the line, Indy.  
+#
+# [JWC]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ========================================================================================
+
+symbols
+
+message 	startup
+message 	crossed
+
+keyframe 	in_pushHat=0in_figithat_4_4.key			local
+keyframe    in_handsONhips=0in_stand4.key       	local
+keyframe    in_sideTOhips=0in_stand1_bd_4.key   	local
+
+sound 		music0=mus_gen_awechord1.wav  			local
+sound		in_religionunknown=Ss01j01.wav			local
+
+surface 	trigger
+
+thing   	indy	
+thing		player			local
+thing   	cam1
+thing		c1_t1
+thing		c1_t2
+thing 		dummycam
+
+int			curCam			local
+int			played=0		local
+int			in_track0		local
+
+cog			wolf
+
+end
+
+# ========================================================================================
+
+code
+
+startup:
+	
+      	
+	player = GetLocalPlayerThing();
+    curCam = GetCurrentCamera();
+	return;
+
+
+crossed:
+	
+	if ((GetSenderRef() == trigger) && (played == 0)) 
+	{
+        played=1; 	# play only once
+		
+		# play "awesome" music
+		PlaySoundLocal(music0, 1.0, 0.0, 0x0, 0);        
+        
+	
+				
+					   	
+        SendMessageEx(wolf, 27, 1, 0, 0, 0);		# activates wolf cog
+
+       
+		
+	}
+	
+return;
+     
+  
+
+end
+

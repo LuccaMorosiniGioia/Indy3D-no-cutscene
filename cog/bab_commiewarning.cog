@@ -1,0 +1,79 @@
+# Jones 3D Cog Script
+#
+# BAB_introsceme.cog
+#
+# [SXC]
+#
+# (C) 1998 LucasArts Entertainment Co. All Rights Reserved
+# ========================================================================================
+
+symbols
+
+    message     startup
+    message     entered
+    message     user0
+   
+    thing       player                              local
+    thing       indyactor
+    thing       actor_sight0
+    cog         targetcog
+    
+    thing       spinpos
+    
+    thing       cam0
+    thing       cam0_tgt0
+    thing       cam0_tgt1
+    
+    surface     tripsurf
+    
+    keyframe    inStand2=0in_stand2.key             local
+    keyframe    in_stand1_2=0in_stand1_bd_2.key      local
+    keyframe    in_leanin=0in_leanin_2_2.key        local
+    
+    sound       indyline0=bb01j02.wav               local
+    sound       indyline1=bb03j02.wav               local
+    sound       redmusic=mus_gen_russsubdued1.wav   local
+    
+    int         checkit=0                           local
+    int         in_track0                           local
+    int         themechan=0                         local
+    int         jeepchan=0                          local
+    
+end
+
+code
+
+# ========================================================================================
+startup:
+	player = GetLocalPlayerThing();
+    return;
+        
+# ========================================================================================
+user0:
+
+    checkit = 1;
+    
+return;
+
+# ========================================================================================
+entered:
+    if ((checkit == 0) && (GetSenderRef() == tripsurf))
+    {
+        checkit=1;
+        StartCutscene(1);
+        
+        
+        
+       
+        
+        
+        EndCutscene();
+        ClearActorFlags(player, 0x200000);
+        SendMessage(targetcog, user4);
+    }
+        
+return;
+        
+#----------------------------------------------------------------------------------------
+
+end

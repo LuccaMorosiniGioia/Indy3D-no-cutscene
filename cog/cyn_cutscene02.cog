@@ -1,0 +1,687 @@
+# Jones 3D Cog Script
+#
+# CYN_Cutscene02.cog
+#
+# Indy hooks up with Sophia at the campsite. 
+#
+# [RT & revised by HB]
+#
+# (C) 1998 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ===================================================================
+
+symbols
+
+	# ************************ MESSAGES ************************
+
+	message		startup
+	message		entered
+	message		callback
+	message		pulse
+	message		timer
+
+	# ************************ COGS ************************
+	cog			fallcog
+	cog			sectorcog
+	cog			ambcog
+	
+	# ************************ KEYFRAMES ***********************
+
+	keyframe	in_Rub=0in_rubhead_4_4.key				local
+	keyframe	in_PushHat=0in_figithat_4_4.key			local
+	keyframe	in_ArmsOut=0in_armsout_1_1.key			local
+	keyframe	in_armsup=0in_armsup_1_1.key			local
+	keyframe	in_lean=0in_leanin20cm_1_1.key			local
+	keyframe	in_Think=0in_thinking_4_4.key			local
+	keyframe	in_Examine=0in_examgear_1.key			local
+	keyframe	in_TurnGear=0in_turngear.key			local
+	keyframe	in_Enter=0in_enterheli.key				local
+	keyframe	in_leftup=0in_leftarm_1_1.key			local
+	keyframe	in_grabVPhoto=0in_pickupphoto_1_13.key	local
+	keyframe	in_dropVPhoto=0in_dropphoto_13_4.key	local
+	keyframe	in_overThere=0in_overshoulder_4_1.key	local
+
+	keyframe	in_Stand2=0in_stand2.key				local
+	keyframe	in_Stand4=0in_stand4.key				local
+	keyframe	in_Stand5=0in_leanin20cm_1_1.key		local 
+	keyframe	in_studyVPhoto=0in_stand13.key			local
+	keyframe	in_1to2=0in_stand1_bd_2.key				local
+	keyframe	in_1to4=0in_stand1_bd_4.key				local
+	keyframe	in_sitheli=0in_sitheli.key				local
+
+	keyframe	so_Doff=0so_helmetoff.key				local
+	keyframe	so_Hair=0so_hair_2_4.key				local
+	keyframe	so_Look=0so_lookshards_1_1.key			local
+	keyframe	so_WaveL=0so_waveleft_1_1.key			local
+	keyframe	so_WaveR=0so_waveright_1_1.key			local
+	keyframe	so_Pouch=0so_pouch_2_2.key				local
+	keyframe	so_HeadShake=0so_headshake_1_1.key		local
+	keyframe	so_CrossArms=0so_armsmid_3_3.key		local
+
+	keyframe	so_Stand1=0so_stand1.key				local
+	keyframe	so_Stand3=0so_stand3.key				local
+	keyframe	so_Stand4=0so_stand4.key				local
+	keyframe	so_Stand5=0so_stand5.key				local
+	keyframe	so_Stand6=0so_stand6.key				local
+	keyframe	so_1to2=0so_stand1_bd_2.key				local
+	keyframe	so_2to1=0so_stand2_bd_1.key				local
+	keyframe	so_leftup=0so_lefthnd_2_2.key			local
+	keyframe	so_helmeton=0so_helmeton_2_2.key		local
+
+	keyframe	in_arm_Point=0in_photopoint.key			local
+	keyframe	so_arm_Toss=0so_throwphoto.key			local
+
+	keyframe	chopTurn=cyn_chopr.key					local
+	keyframe	chopTurn2=cyn_chopr2.key				local
+	keyframe	chopFly=cyn_chopr_fly.key				local
+
+	# ************************* MODELS *************************
+
+	model		mod_in_Hair=head_in_goodhair.3do		local
+	model		mod_in_HandHat=hand_in_hat.3do 			local
+	model		mod_in_HandPhoto=hand_in_vophoto.3do	local
+	model		mod_in_HandGear=hand_in_gear.3do		local
+
+	model		mod_so_Helmet=head_so_helmet.3do		local
+	model		mod_so_HandHelmet=hand_so_helmet.3do	local
+	model		mod_so_HandPhoto=hand_so_photo.3do		local
+	model		mod_so_HandShard=hand_so_shard.3do		local
+	model		mod_so_HandGear=hand_so_gear.3do		local
+
+	model		mod_arm_PhotoBab=photo_so_bab.3do		local
+	model		mod_arm_PhotoVo=photo_so_vo1.3do		local
+	model		mod_arm_PhotoV2=photo_so_vo2.3do		local
+
+#	model		mod_copter=cyn_chopr.3do				local
+	model		chop_blad=cyn_chopr_blade.3do			local
+	model		chop_rot=cyn_chopr_rotor.3do			local
+
+	# ************************* SOUNDS *************************
+
+	sound		in00=cn02j00.wav						local
+	sound		in01=cn02j01.wav						local
+	sound		in02=Cn02j03.wav						local
+	sound		in03=Cn02j05.wav						local
+	sound		in04=Cn02j05a.wav						local
+	sound		in05=Cn02j07.wav						local
+	sound		in06=Cn02j09.wav						local
+	sound		in07=Cn02j11.wav						local
+	sound		in08=Cn02j15.wav						local
+	sound		in09=Cn02j17.wav						local
+	sound		in10=Cn02j21.wav						local
+	sound		in11=Cn02j23.wav						local
+	sound		in12=Cn02j25.wav						local
+	sound		in13=Cn02j27.wav						local
+	sound		in14=Cn02j29.wav						local
+	sound		in15=Cn02j32.wav						local
+	sound		in16=Cn02j34.wav						local
+
+	sound		so01=Cn02s02.wav						local
+	sound		so02=Cn02s04.wav						local
+	sound		so03=Cn02s06.wav						local
+	sound		so04=Cn02s08.wav						local
+	sound		so05=Cn02s10.wav						local
+	sound		so06=Cn02s12.wav						local
+	sound		so07=Cn02s13.wav						local
+	sound		so08=Cn02s14.wav						local
+	sound		so09=Cn02s16.wav						local
+	sound		so10=Cn02s18.wav						local
+	sound		so11=Cn02s19.wav						local
+	sound		so12=Cn02s20.wav						local
+	sound		so13=Cn02s22.wav						local
+	sound		so14=Cn02s24.wav						local
+	sound		so15=Cn02s26.wav						local
+	sound		so16=Cn02s28.wav						local
+	sound		so17=Cn02s30.wav						local
+	sound		so18=Cn02s31.wav						local
+	sound		so19=Cn02s33.wav						local
+	sound		so20=Cn02s35a.wav						local
+	sound		so21=Cn02s35b.wav						local
+
+	sound		heliRev1=helicopter_rev1.wav			local
+	sound		heliRev2=helicopter_rev2.wav			local
+	sound		heliStart1=helicopter_startup.wav		local
+	sound		heliStart2=helicopter_startup2.wav		local
+
+	sound		pull_part=cyn_metalpart_rattle.wav		local
+	sound		spin_part=cyn_metalpart_spin.wav		local
+
+	sound		mus_EnterIndy=mus_cyn_cutscene1.wav		local
+	sound		mus_VolodPic=mus_cyn_cutscene2.wav		local
+	sound		mus_GetPart=mus_gen_machinepart.wav		local
+	sound		mus_SpyLine=mus_cyn_cutscene3.wav		local
+
+	sound		mus_LiftOff=mus_gen_indycalm.wav		local
+
+	# ************************* THINGS *************************
+
+	thing		player									local
+
+	thing		indy									linkid=0
+	thing		sophia									linkid=1
+
+	thing		in_arm									nolink
+	thing		so_arm									linkid=2
+
+	thing		in_Target1								nolink
+	thing		in_Target2								nolink
+	thing		in_Target3								nolink
+	thing		in_Target4								nolink
+#	no in_Target5
+	thing		in_Target6								nolink
+	thing		in_Target7								nolink
+	thing		in_Target8								nolink
+	thing		in_target9								nolink
+
+	thing		so_Target1								nolink
+	thing		so_Target2								nolink
+	thing		so_Target3								nolink
+	thing		so_Target4								nolink
+#	no so_Target5
+#	no so_Target6
+	thing		so_Target7  							nolink
+	thing		so_Target8								nolink
+	thing		so_Target9								nolink
+
+	thing		so_ghost1								nolink
+	thing		so_ghost2								nolink
+
+	thing		indyCam									nolink
+	thing		indyCam2								nolink
+	thing		indyCam3								nolink
+	thing		indyCam4								nolink
+	thing		indyCam5								nolink
+	thing		indyCam6								nolink
+	thing		indyCam7								nolink
+	thing		indyCam8								nolink
+
+	thing		sophiaCam								nolink
+	thing		sophiaCam2								nolink
+	thing		sophiaCam3								nolink
+	thing		sophiaCam4								nolink
+	thing		sophiaCam5								nolink
+	thing		sophiaCam6								nolink
+	thing		sophiaCam7								nolink
+
+#	thing		sideCam									nolink
+	thing		sideCam2								nolink
+	thing		sideCam3								nolink
+
+	thing		lowcam									nolink
+	thing		longCam									nolink
+#	thing		tableCam								nolink
+	thing		photoCam								nolink
+	thing		heliCam									nolink
+
+	thing		photoBab								nolink
+	thing		photoVo									nolink
+	thing		photoV2									nolink
+
+	thing		camAnchor								nolink
+	thing		copterAnchor							nolink
+
+	thing		table									nolink
+
+	thing		copter									linkid=3
+	thing		copt_Target1							nolink
+	thing		copt_Target2							nolink
+	thing		copt_Target3							nolink
+	thing		copt_Target4							nolink
+	thing		copt_Target5							nolink
+
+	thing		in_ghost1								nolink
+	thing		fadeoutplate							nolink
+
+	thing		vulture_1								nolink
+	thing		vulture_2								nolink
+
+	# ******************* WORLD & ENGINE REFS ******************
+
+	material	gearMat=rigear.mat						local
+	sector		trigger									linkid=4
+
+	# ********************** VARIABLES *************************
+
+	flex		in_rotRate								local
+	flex		so_rotRate								local
+	flex		cop_rotRate								local
+
+	int			in_track1								local
+	int			in_track2								local
+	int			so_track								local
+	int			cop_track								local
+	int			in_ArmTrack								local
+	int			so_ArmTrack								local	
+	int			part_track								local
+
+	int			in_colltype								local
+	int			so_colltype								local
+	int			co_colltype								local
+
+	int			so_swap=0								local
+	int			so_arm_swap=0							local
+
+	int			sender									local
+	int			curSound								local
+	int			matAnimNum								local
+	int			bEntered=0								local
+
+	int			curCam									local
+
+	int			chopSound1								local
+	int			chopSound2								local
+
+	int			callNum									local
+
+	int			meshRefHat								local
+	int			meshRefHead								local
+	int			meshRefHand								local
+	int			so_meshRefHand							local
+
+	int			spychan									local
+
+	# *********************** FX STUFF ************************
+
+	template	chopdust=chopperdustfx					local
+	template	smokeTpl=+baz_spr_smoke					local
+
+	thing		dust_pivot								nolink
+	thing		smoke									local
+	thing		chop_shadow								nolink							
+
+	# ********************* SUBROUTINES ***********************
+	
+	flex		goggleHead								local
+
+end
+
+# ===================================================================
+
+code
+
+# -------------------------------------------------------------------
+
+startup:
+
+	# Pointer to Player
+	player = GetLocalPlayerThing();
+
+	# Prep actors...
+	in_rotRate = GetThingMaxRotVel(indy);
+	so_rotRate = GetThingMaxRotVel(sophia);
+	cop_rotRate = GetThingMaxRotVel(copter);
+
+	AISetCutSceneMode(indy);
+	AISetCutSceneMode(sophia);
+	AISetCutSceneMode(copter);
+
+	# Prep set...
+	SetThingFlags(chop_shadow, 0x80000);
+	SetThingFlags(fadeoutplate, 0x80000);
+
+	return;
+
+# -------------------------------------------------------------------
+
+entered:
+
+	if((GetSenderRef() != trigger) || bEntered) return;
+
+	bEntered = 1;
+
+	Sleep(0.8); # see player finish climbing out of pit
+
+	curCam = GetCurrentCamera();
+	SetActorFlags(player, 0x200000);
+
+	# Stop olv_outside_a01 in the birdambient cog
+	SendMessage(ambcog, user0);
+
+	StartCutscene(1);
+
+	EndCutscene();
+
+	JonesEndLevel();
+
+	# Make sure we can't see the fadeoutplate...
+	SetThingAlpha(fadeoutplate, 0.0);
+
+	# Prep...
+	ClearThingFlags(copter, 0x80000);
+	ClearThingFlags(chop_shadow, 0x80000);
+	DestroyThing(vulture_1);
+	DestroyThing(vulture_2);
+
+	# Disable player...
+	ResetThing(player); # right now
+	# PlayMode(player, 1, 0); # twice???
+	PlayMode(player, 1, 0); # get him into a nice stand
+	CopyPlayerHolsters(player, indy);
+	SetThingFlags(player, 0x80000);
+	AISetCutsceneMode(indy);
+	AISetCutsceneMode(sophia);
+
+	# Prep Indy & Sophia...
+	ClearThingFlags(indy, 0x80000);
+	ClearThingFlags(sophia, 0x80000);
+
+	
+	
+
+	
+
+	# Play helicopter startup sound
+	PlaySoundLocal(heliStart1, 1, 0, 0x10, 0);
+
+	# Stop the anim on the gear and swap it back out...
+	StopAnim(matAnimNum);
+	RestoreThingMesh(indy, meshRefHand);
+
+	# Cut to helicopter...
+	SetCameraFocus(2, heliCam);
+	SetCameraSecondaryFocus(2, copterAnchor);
+	SetCurrentCamera(2);
+	SetCameraFOV(50, 0, 0.0);
+
+	# Sophia's already inside...
+	TeleportThing(sophia, so_Target7);
+	so_track = PlayKey(sophia, so_Stand6, 4, 0x10, 0);
+
+	# Start that puppy...
+	cop_track = PlayKey(copter, chopTurn, 4, 0x10, 0);
+
+	# second sartup sound
+	Sleep(3.0);
+	PlaySoundLocal(heliStart2, 1, 0, 0x20, 0);
+
+	# Kill waterfall noise right now...
+	SendMessage(fallcog, user0);
+
+	# timers to control the remaining sound fades
+	SetTimerEx(2.368, 1, 0, 0);
+	SetTimerEx(6.687, 2, 0, 0);
+	SetTimerEx(5.790, 3, 0, 0);
+	SetTimerEx(7.579, 4, 0, 0);
+
+	# light dust
+	SetPulse(0.5);
+
+	# Indy enters the shot...
+	TeleportThing(indy, in_Target6);
+	AISetMoveSpeed(indy, 1.1);
+	AISetLookThing(indy, in_Target7);
+	AISetMoveThing(indy, in_Target7, 1);
+
+	# Indy animates into the copter...
+	PlayKey(indy, in_Enter, 4, 0x12, 1);
+
+	# ...and actually sits there!
+	TeleportThing(indy, in_target9);
+
+	# Fasten yer seatbelts!
+	AttachThingToThingEx(indy, copter, 0x000C);
+	PlayKey(indy, in_sitheli, 4, 0x14, 0);
+	AttachThingToThingEx(sophia, copter, 0x000C);
+	AttachThingToThing(copterAnchor, copter);
+
+	# Heads up!
+	AISetLookThing(sophia, copt_Target2);
+	AISetLookThing(indy, copt_Target2);
+
+	# Now rev it up a bit...
+	StopKey(copter, cop_track, 0.5);
+	SetPulse(0.25);
+	cop_track = PlayKey(copter, chopTurn2, 4, 0x10, 0);
+	Sleep(0.8);
+	StopKey(copter,cop_track, 0.5);
+	PlayKey(copter, chopFly, 4, 0x10, 0);
+	SetPulse(0.1);
+	Sleep(0.3);
+
+	# The blades blur...
+	SetThingMesh(copter, 3, chop_blad, 0); # main rotor
+	SetThingMesh(copter, 1, chop_rot, 0); # tail rotor
+	Sleep(1.0);
+
+	in_colltype = GetCollideType(indy);
+	so_colltype = GetCollideType(sophia);
+	co_colltype = GetCollideType(copter);
+	SetCollideType(indy, 0);
+	SetCollideType(sophia, 0);
+	SetCollideType(copter, 0);
+
+	# ...and the thing flies away...
+	SetThingMaxRotVel(copter, 10.0); # slow to turn
+	AISetMoveSpeed(copter, 1.0);
+	AISetMoveThing(copter, copt_Target1, 0);
+
+	# fade the shadow out
+	ThingFadeAnim(chop_shadow, 1.0, 0.0, 3.0, 0);
+
+	# Create a ring blast under the chopper
+	smoke = CreateThing(smokeTpl, dust_pivot);
+	AnimateSpriteSize(smoke, '0.1 0.1 1.0', '2.0 2.0 0.0', 0.75);
+	SetCameraFOV(75, 1, 1.7);
+	Sleep(1.0);
+
+    # send message to soundfade out cog to clear sector sounds 
+	SendMessage(sectorcog, user3);
+	SendMessage(ambcog, user3);
+
+	# Stop dust particles
+	SetPulse(0);
+	AISetMoveSpeed(copter, 1.1);
+	Sleep(0.7);
+
+	AISetMoveSpeed(copter, 1.2);
+	AISetLookThing(sophia, copt_Target2);
+	AISetLookThing(indy, copt_Target2);
+	AISetLookThing(copter, copt_Target2);
+	AISetMoveThing(copter, copt_Target2, 0);
+	Sleep(0.8);
+	
+	AISetMoveSpeed(copter, 1.3);
+	AISetLookThing(sophia, copt_Target3);
+	AISetLookThing(indy, copt_Target3);
+	AISetLookThing(copter, copt_Target3);
+	AISetMoveThing(copter, copt_Target3, 0);
+	Sleep(1.3);
+
+	AISetMoveSpeed(copter, 1.2);
+	AISetLookThing(sophia, copt_Target4);
+	AISetLookThing(indy, copt_Target4);
+	AISetLookThing(copter, copt_Target4);
+	AISetMoveThing(copter, copt_Target4, 0);
+	Sleep(0.5);
+
+	AISetMoveSpeed(copter, 1.1);
+	AISetLookThing(sophia, copt_Target5);
+	AISetLookThing(indy, copt_Target5);
+	AISetLookThing(copter, copt_Target5);
+	AISetMoveThing(copter, copt_Target5, 0);
+	SetCameraFOV(90, 1, 9.0);
+	Sleep(3.0);
+	AISetMoveSpeed(copter, 1.0);
+	Sleep(5.0);
+
+	SetCollideType(indy, in_colltype);
+	SetCollideType(sophia, so_colltype);
+	SetCollideType(copter, co_colltype);
+
+	# Fade out...
+	ClearThingFlags(fadeoutplate, 0x80000);
+	ThingFadeAnim(fadeoutplate, 0.0, 1.0, 1.0, 0);
+	
+    Sleep(1.0);
+	
+	EndCutscene();
+	
+	#### test only #### Clean up...
+	## ClearActorFlags(player, 0x200000); 
+	## SetCurrentCamera(curCam);
+	## ResetCameraFOV(0, 0.0);
+
+	SetThingMaxRotVel(indy, in_rotRate); 
+	SetThingMaxRotVel(sophia, so_rotRate); 
+	SetThingMaxRotVel(copter, cop_rotRate);
+
+	# Put Sophia's heads back!
+	SetThingVoiceHeads(sophia, "sohead", "head_so_msound.3do", "head_so_asound.3do", "head_so_amsound.3do", "head_so_osound.3do");
+
+	JonesEndLevel();
+
+	return;
+
+# -------------------------------------------------------------------
+
+callback:
+
+	sender = GetSenderRef();
+	callNum = GetParam(1);
+
+	if (sender == indy)
+	{
+		if (callNum == 21)
+		{
+			meshRefHat = SetThingMesh(indy, 8, mod_in_Hair, 0);
+			meshRefHead = SetThingMesh(indy, 9, mod_in_Hair, 1);
+			meshRefHand = SetThingMesh(indy, 15, mod_in_HandHat, 0);
+
+			# RT: Set up no-hat heads...
+			SetThingVoiceHeads(indy, "inhead", "head_in_goodhair.3do", "head_in_asound_gh.3do", "head_in_amsound_gh.3do", "head_in_osound_gh.3do");
+		}
+		else if (callNum == 22)
+		{
+			RestoreThingMesh(indy, meshRefHat);
+			RestoreThingMesh(indy, meshRefHead);
+			RestoreThingMesh(indy, meshRefHand);
+            
+			# RT: Restore default heads...
+			SetThingVoiceHeads(indy, "inhead", "", "head_in_asound.3do", "head_in_amsound.3do", "head_in_osound.3do");
+		}
+		else if (callNum == 23)
+		{
+			meshRefHand = SetThingMesh(indy, 15, mod_in_HandGear, 0);
+		}
+		else if (callNum == 24)
+		{
+			matAnimNum = MaterialAnim(gearMat, 8.0, 0x1);
+		}
+		else if (callNum == 25)
+		{
+			meshRefHand = SetThingMesh(indy, 15, mod_in_HandPhoto, 0);
+			SetThingFlags(photoV2, 0x80000);
+		}
+		else if (callNum == 26)
+		{
+			RestoreThingMesh(indy, meshRefHand);
+			ClearThingFlags(photoV2, 0x80000);
+		}
+	}
+	else if (sender == sophia)
+	{
+		if (callNum == 16) # Remove swap anims are tagged with #16
+		{
+			RestoreThingMesh(sophia, -99); # -99 Restores ALL meshes
+		}
+		else if (callNum == 21)
+		{
+			# Swap out Sophia's goggle head
+			RestoreThingMesh(sophia, -99); # -99 Restores ALL meshes
+			# Swap in her hand with the helmet
+			SetThingMesh(sophia, 18, mod_so_HandHelmet, 0);
+		}
+		else if (callNum == 22)
+		{
+			SetThingMesh(sophia, 18, mod_so_HandShard, 0);
+		}
+		else if (callNum == 23 && so_swap == 1)
+		{
+			SetThingMesh(sophia, 15, mod_so_HandGear, 0);
+			so_swap = 0;
+		}
+		else if (callNum == 24)
+		{
+			# Get rid of her helmet hand...
+			RestoreThingMesh(sophia, so_meshRefHand);
+
+			# Swap in her goggle head...
+			call goggleHead;
+
+			# New set of heads...
+			SetThingVoiceHeads(sophia, "sohead", "head_so_helmet.3do", "head_so_helmet_asound.3do", "head_so_helmet_amsound.3do", "head_so_helmet_osound.3do");
+		}
+	}
+	else if (sender == so_arm)
+	{
+		RestoreThingMesh(so_arm, -99); # -99 Restores ALL meshes
+		
+		if (so_arm_swap == 1)
+		{
+			ClearThingFlags(photoBab, 0x80000);
+		}
+		else if (so_arm_swap == 2)
+		{
+			ClearThingFlags(photoVo, 0x80000);
+		}
+		else if (so_arm_swap == 3)
+		{
+			ClearThingFlags(photoV2, 0x80000);
+		}
+	}
+
+	return;
+
+# -------------------------------------------------------------------
+
+pulse:
+
+	CreateThing(chopdust, dust_pivot);
+	return;
+
+# -------------------------------------------------------------------
+
+goggleHead:
+
+	SetThingMesh(sophia, 2, mod_so_Helmet, 0);
+	SetThingMesh(sophia, 3, mod_so_Helmet, 1);
+	SetThingMesh(sophia, 4, mod_so_Helmet, 2);
+	SetThingMesh(sophia, 5, mod_so_Helmet, 3);
+	SetThingMesh(sophia, 6, mod_so_Helmet, 4);
+	SetThingMesh(sophia, 7, mod_so_Helmet, 5);
+	SetThingMesh(sophia, 8, mod_so_Helmet, 6);
+	SetThingMesh(sophia, 9,  mod_so_Helmet, 7);
+	SetThingMesh(sophia, 10, mod_so_Helmet, 8);
+
+	return;
+
+# -------------------------------------------------------------------
+timer:
+
+If (GetSenderID() == 1)
+	{
+		chopSound1 = PlaySoundLocal(heliRev1, 0, 0, 0x11, 0);
+		ChangeSoundVol(chopSound1, 1, 2.879);
+	}
+
+If (GetSenderID() == 2)
+	{
+		ChangeSoundVol(chopSound1, 0, 7.894);
+	}
+
+If (GetSenderID() == 3)
+	{
+		chopSound2 = PlaySoundLocal(heliRev2, 0, 0, 0x1, 0);
+		ChangeSoundVol(chopSound2, 1, 1.279);
+	}
+
+If (GetSenderID() == 4)
+	{
+		# Fade copter sound
+		ChangeSoundVol(chopSound2, 0, 6);
+	}
+return;
+
+# -------------------------------------------------------------------
+	
+end

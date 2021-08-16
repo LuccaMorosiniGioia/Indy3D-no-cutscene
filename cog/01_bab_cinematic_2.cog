@@ -1,0 +1,239 @@
+# Jones 3D Cog Script
+#
+# 01_BAB_Cinematic_2.cog
+#
+# Introduce Volodnikov as Indy overhears his Babylon plans 
+#
+# [HB]
+#
+# (C) 1998 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ===================================================================
+
+symbols
+
+	# ************************ MESSAGES ************************
+
+	message		startup
+	message		entered
+    message		callback
+	message		pulse
+    message     activate
+	
+	# ************************ KEYFRAMES ***********************
+	
+	keyframe	in_kneel=in_stand_bd_crawl.key			local
+	keyframe	in_standUp=0in_crawl_bd_stand.key		local
+	   
+	keyframe	vo_foldArms=0vo_stand3_bd_1.key			local
+	keyframe	vo_armsBack=vo_stand2_arms_back.key		local
+	keyframe	vo_armsSide=vo_stand3_arms_side.key		local
+	keyframe	vo_rubHead=0vo_rubhead_1_2.key			local
+	keyframe	vo_thumpHands=0vo_truestory_3_2.key		local
+	keyframe	vo_glassesR=0vo_glassesR_3_3.key		local
+	keyframe	vo_stop=0vo_handhalt_3_3.key			local
+	
+	keyframe	vo_waveBoth=0vo_waveboth_walk.key		local
+	keyframe	vo_leftup=0vo_leftup_2_1.key			local
+	keyframe	vo_leftUp3=0vo_leftup_3_3.key			local
+	keyframe	vo_rightup=0vo_rightup_3_3.key			local
+	keyframe	vo_bothup=0vo_bothup_3_3.key			local
+	keyframe	vo_machine=0vo_machine_3_3.key			local
+
+	keyframe	rm_twiddle=0rm_switches_1_1.key			local
+	keyframe	rm_point=0rm_points_1_1.key				local
+	keyframe	rm_doubt=0rm_methods_1_1.key			local
+
+	# ************************* MODELS *************************
+		
+    model  		mod_in=gen_in_shirt.3do					local
+	model  		mod_vo=gen_vo.3do						local 
+	model		mod_radMan=bab_rm.3do					local
+	model		mod_chair=bab_chair_dirctr.3do			local
+
+	# ************************* SOUNDS *************************
+    
+	sound		rm_reminds=Bb02m02.wav					local
+	sound		vo_apparat=Bb02v03.wav					local
+	sound		rm_decode=Bb02m04.wav					local
+	sound		vo_lookMarduk=Bb02v05.wav				local
+	sound		rm_whatPlane=Bb02m06.wav				local
+	sound		vo_aetherium=Bb02v07.wav				local
+	sound		rm_doubts=Bb02m08.wav					local
+	sound		vo_informMin=Bb02v09a.wav				local
+	sound		vo_trueStory=Bb02v09b.wav				local
+    sound       open_doorsound=sea_doors_open_c.wav     local
+    sound       close_doorsound=sea_doors_close_c.wav   local
+    
+    sound       volmusic=mus_gen_russremin3.wav         local
+    sound       voclue=BB02J01.WAV                      local
+    
+    # ************************* THINGS *************************
+
+	thing		player									local
+							
+	thing		indy	    							linkid=0
+    thing		volod	    							linkid=1
+	thing		radman									linkid=2
+												
+	thing		in_tgt1  								nolink
+	thing		in_tgt2  								nolink
+	thing		in_tgt3									nolink
+
+	thing		vo_mov_tgt1								nolink
+	thing		vo_mov_tgt2								nolink
+	thing		vo_mov_tgt3								nolink
+	thing		vo_mov_tgt4								nolink
+	thing		vo_mov_tgt5								nolink
+
+	thing		cam_roof1								nolink
+	thing		cam_roof2								nolink
+	thing		cam_inside1								nolink
+	thing		cam_inside2								nolink
+	
+	thing		cam_look_tgt1  							nolink
+	thing		cam_look_tgt2  							nolink
+	thing		cam_look_tgt3  							nolink
+	
+	thing		cam_mov_tgt1  							nolink
+
+	thing		chair									nolink
+	thing		camera_1								nolink
+    thing       fence_door
+    thing       vo_door
+    
+    thing       vodoor0                                 linkid=5
+    thing       vodoor1                                 linkid=5
+						   
+	# *********************** VARIABLES ***********************
+			
+	surface		trigger         						linkid=3
+	surface		trigger1         						linkid=3
+	surface		trigger2         						linkid=3
+    
+    surface     chatsurf0                               local
+    surface     chatsurf1                               local
+    surface     chatsurf2                               local
+    surface     chatsurf3                               local
+						
+	vector		v_camspot								local
+
+	int			in_keyTrack1							local
+	int			in_keyTrack2							local
+
+	int			vo_keyTrack1							local
+	int			vo_keyTrack2							local
+											
+	int			curSound								local
+	int			didThisBefore=0							local
+
+	int			curCam									local
+    int         doorcommentchan                         local
+    int         safety=0                                local
+
+	flex		vo_Turn									local
+	flex		moveHeadInterval=0.1					local
+	
+end
+
+# ===================================================================
+
+code
+
+# -------------------------------------------------------------------
+startup:
+
+	# Pointer to Player
+	player = GetLocalPlayerThing();
+    # Prep Radio Man...
+    ClearThingFlags(radman, 0x80000);
+    AISetCutSceneMode(radman);
+	
+	return;
+
+# -------------------------------------------------------------------
+activate:
+
+    if ((GetSenderID() == 5) && (safety == 0))
+    {
+        safety=1;
+        StartCutscene(1);
+        SetActorFlags(player, 0x200000);
+        doorcommentchan=PlayVoice(player, voclue, 1, 0);
+        WaitForSound(doorcommentchan);
+        sleep(0.5);
+        ClearActorFlags(player, 0x200000);
+        EndCutscene();
+        safety=0;
+    }
+    
+return;
+
+# -------------------------------------------------------------------
+entered:
+
+	if ((GetSenderID() == 3) && (didThisBefore == 0))
+    {
+    
+	    didThisBefore = 1;       
+	    curCam = GetCurrentCamera();
+	    
+		SetActorFlags(player, 0x200000);
+	    StartCutscene(1);
+
+	# Disable player...
+        #SetThingFlags(player, 0x80000);
+        
+	    # Prep actor Indy...
+        #CopyOrientandPos(player, indy);
+	    #ClearThingFlags(indy, 0x80000);
+
+        TeleportThing(indy, in_tgt2);
+	#Inside the radio room
+	#TeleportThing(indy, vo_mov_tgt3);
+	
+	    # Clean up...
+	    #SetThingFlags(volod, 0x80000);
+	    #SetThingFlags(indy, 0x80000);
+	#AIClearCutSceneMode(radman);
+	   
+	    #CopyOrientAndPos(indy, player);
+	    #ResetThing(player);
+	    # need to reset Indy's action so he just stands here...
+	    #Sleep(0.01);
+	    #ClearThingFlags(player, 0x80000);
+	    
+	    #v_camspot = VectorAdd(VectorTransformToOrient(player, '0.25 -0.1 0.0'), GetThingPos(player));	
+		#SetCameraPosition(1, v_camspot);
+		#SetCurrentCamera(curCam);
+	    #ResetCameraFOV(0, 0.0);     
+	    #Sleep(1.0);                                                    
+        #SetCollideType(fence_door, 3);
+		DestroyThing(radman); # gone!
+
+	    EndCutscene();
+		ClearActorFlags(player, 0x200000);
+        MoveToFrame(fence_door, 0, 1);
+        SetCollideType(vo_door, 3);
+        safety=1;
+    }        
+     
+	return;
+
+# -------------------------------------------------------------------
+
+pulse:
+
+	SetThingHeadLookThing(radman, volod);
+
+return;
+    
+# -------------------------------------------------------------------
+
+callback:
+
+return;
+
+# -------------------------------------------------------------------
+
+end

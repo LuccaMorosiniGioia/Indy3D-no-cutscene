@@ -1,0 +1,161 @@
+# Jones 3D Cog Script
+#
+# Riv_Parachute.cog
+#
+# This is the opening cutscene wherein Indy parachutes into the level.
+#
+# [PAZ] && [TRM]
+#
+# (C) 1999 LucasArts Entertainment Co. All Rights Reserved
+#========================================================================================
+
+symbols
+
+	message		startup
+	message		user0
+	
+	thing		player							local #duh...
+	thing		chuteindy						#actor w/ chute
+	thing		chutetarget						#target for chuteindy
+	thing		chutetarg2						#where indy steps to while the chute drops
+	thing		chutetarg3						#where chuteindy lines up after keyframes are done
+	thing		cam1							#1st cutscene cam
+	thing		camtarget1						#target for cam1's focus
+	thing		cam2							#2nd cs camera
+	thing		camtarget2						#2nd cam focus
+	thing		cam3							#3rd cam
+	thing		camtarget3  					#3rd cam focus
+ 	thing		rock    						#ghost thing where the rockw/chute will be created
+    thing       chute
+	thing		chutelooktarg					#thing the chute actor looks at
+	thing		camspot							#place the cam interps to
+	thing		plane							#da plane! da plane!
+    thing       fadePlate
+    thing       fadePlate2
+	
+	template	tpl_Chute=rockchute				local
+    template    tpl_Rock=chute4rock             local
+	
+	keyframe	flail=0in_chute.key				local	#indy's animations while he drops
+	keyframe	land=0in_chute_land.key			local	#landing animation
+	keyframe	remove=0in_chute_remove.key		local	#removing the harness
+	
+	sound       snd_Plane=riv_intro_plane_c.wav local
+	sound		crunch=fol_in_landsnow.wav		local	#landing noise
+	sound		rstep=fol_in_rrunsnow.wav		local	#r step
+	sound		oomf=inxj016g.wav				local	#Indy says "oomf"
+	sound		tunes=mus_riv_intro.wav			local	#intro tunes
+	sound		whoosh=riv_parachute_whoosh.wav	local	#parachute whooshes past camera
+	sound		ruffle=riv_parachute_ruffle.wav	local	#parachute ruffles on ground
+	sound		undo=riv_parachute_unfasten.wav	local	#unfastens parachute
+    sound       sfx_FootFall=fol_in_landsnow.wav    local   # landing in snow
+    
+    # ** subroutines **
+    flex        landing     local
+    flex        ending      local
+	
+	int			start=0			local					#int to see if the cutscene has played
+	int			tracknumber		local					#return of the current keyframe track #
+#    int         dontPlay=1      local
+
+	int			bSeen=0			local
+	
+end
+
+#========================================================================================
+	
+code
+
+startup:
+
+	SetMasterCog(GetSelfCog()); # RT: Set master cog so we get autosave/restore message
+
+	Sleep(0.001); # Let engine get set up
+
+	
+	return;
+
+# ..............................................................................
+
+user0: # RT: Indicates that autosave/restore has completed...
+
+	if (bSeen) return; # RT
+	bSeen = 1;
+
+  
+
+	player = GetLocalPlayerThing();
+
+	
+    
+    #if(dontPlay == 1) return;
+    
+    # disable controls
+    StartCutscene(2);	
+	SetActorFlags(player, 0x200000);
+    
+    # pre-load some junk
+    ClearThingFlags(chuteindy, 0x80000);
+    PlaySoundLocal(tunes, 0.0, 0.0, 0x0, 0);
+    Sleep(0.01);
+    SetThingFlags(chuteindy, 0x80000);
+    
+    # Disable and hide player
+	SetThingFlags(player, 0x80000);
+	SetThingFlags(chuteindy, 0x80000);
+	
+	TeleportThing(chuteindy, chutetarget);
+	
+	Call landing;
+	
+	#destroy plane
+	DestroyThing(plane);
+	
+	Call ending;
+	
+	#reset cutscene cam
+	SetCameraPosInterp(2, 0);
+	SetCameraLookInterp(2, 0);
+  	  
+	return;
+
+#........................................................................................
+
+landing:   
+	
+	
+	
+    #create chute and rock
+    CreateThing(tpl_Chute, chute);
+    CreateThing(tpl_Rock, rock);
+	   
+	return;
+	
+#........................................................................................
+	
+ending:
+   			
+	#Set camera 1 offset to thing	
+	SetCameraPosition(1, GetThingPOS(cam3));
+	
+	#reset cam2's FOV
+	ResetCameraFOV(0, 0.0);
+	
+	#destroy chuteindy, show player
+	DestroyThing(chuteindy);
+	ClearThingFlags(player, 0x80000); # player visible
+	
+	#cam swings into place
+    SetCurrentCamera(1);
+
+	# player in control
+	ClearActorFlags(player, 0x200000);
+	Sleep(0.01);
+	
+	#the end
+	EndCutscene();
+    
+	return;
+				
+	
+end

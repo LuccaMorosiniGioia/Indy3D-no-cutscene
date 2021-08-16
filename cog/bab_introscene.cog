@@ -1,0 +1,155 @@
+# Jones 3D Cog Script
+#
+# BAB_introsceme.cog
+#
+# [SXC & revised by HB]
+#
+# (C) 1999 LucasArts Entertainment Co. All Rights Reserved
+# ==============================================================================
+
+symbols
+
+    message     startup
+    message     user0
+   
+    thing       player                              local
+    thing       indyactor
+    
+    thing       actor_sight0						nolink
+    thing       actor_sight1						nolink
+	thing		intro_in_mk_1
+	thing		intro_in_mk_2
+	thing		intro_in_mk_3
+   
+    thing       cam0								nolink
+    thing       cam1								nolink
+	thing		cam2								nolink
+	thing		cam0_tgt0							nolink
+    thing       cam1_tgt0							nolink
+	thing		cam2_tgt0							nolink
+    
+    thing       fadeplane							nolink
+    
+ 	keyframe	in_falling=in_jump_fall.key			local //159x
+	keyframe	in_landhard=in_jump_land_hard.key	local //57x
+    keyframe    in_handsONhips=0in_stand4.key       local
+    keyframe    in_sideTOhips=0in_stand1_bd_4.key   local
+    keyframe    in_hipsTOside=0in_stand4_bd_1.key   local
+	keyframe	in_ltarmup=0in_leftarm_1_1.key		local
+    keyframe    in_thinking=0in_thinking_4_4.key    local //150x
+
+	material	topMat=pyr_jeep_top.mat				local
+	material	botMat=pyr_jeep_bbmp.mat			local
+    
+    sound       indyline0=inxj006.wav               local //0.8 sec
+    sound       indyline1=bb01j01.wav               local //6.8 sec
+    sound       jeep_run=jep_reverse_loop.wav       local
+    sound       jeep_stop=jep_engine_off.wav        local
+    sound       theme=mus_bab_intro.WAV             local
+    sound       indy_bodyfall=fol_in_landearth.wav  local
+
+	flex		in_headRate							local
+	flex		in_rotRate							local
+    
+    int         checkit=0                           local
+    int         themechan=0                         local
+    int         jeepchan=0                          local
+	int			cursound							local
+	int			in_track0							local
+	int			in_track1							local
+
+	int			bSeen=0								local
+    
+end
+
+# ==============================================================================
+
+code
+
+startup:
+    
+	SetMasterCog(GetSelfCog()); # RT: Set master cog so we get autosave/restore message
+
+	Sleep(0.001); # Let engine get set up
+
+	if (bSeen) return; # new HB
+
+	SetThingAlpha(fadeplane, 1.0); #make sure it's opaque
+	
+    # Start on black ...
+	SetCameraLookInterp(2, 0); #no pan, no tilt
+    SetCameraPosInterp(2, 0); #no dolly
+    SetCameraFocus(2, cam0);
+    SetCameraSecondaryFocus(2, indyactor);
+    SetCurrentCamera(2);
+    SetCameraFOV(55, 0, 0.0);
+
+	return;
+
+# ..............................................................................
+
+user0: # RT: Indicates that autosave/restore has completed...
+
+	if (bSeen) return; # RT
+	bSeen = 1;
+
+	SetThingAlpha(fadeplane, 1.0); # new HB
+
+ 	# RT: Set up jeep materials
+	SetMaterialCel(topMat, 1);
+	SetMaterialCel(botMat, 1);
+    
+    player = GetLocalPlayerThing();
+    SetThingAlpha(player, 1.0);
+    StartCutscene(1);
+	SetActorFlags(player, 0x200000);
+	   
+    //Start the scene...
+    #CopyPlayerHolsters(player, indyactor);
+    #SetThingFlags(player, 0x80000);
+    #ClearThingFlags(indyactor, 0x80000);
+    
+    //Prep actor and move him to 1st mark...
+    AISetCutsceneMode(indyactor);
+
+	
+
+    	//Start Indy toward 3rd mark...
+	#AISetMoveThing(indyactor, intro_in_mk_3, 0);
+	#Sleep(1.8);
+
+	TeleportThing(indyactor, intro_in_mk_3);
+
+	//Cut to reverse...
+	SetCameraFocus(2, cam2);
+    SetCameraSecondaryFocus(2, cam2_tgt0);
+	SetCameraFOV(70, 0, 0.0);
+	Sleep(0.01);
+	SetCameraFOV(90, 1, 0.5);
+    AIWaitForStop(indyactor);
+
+
+    //Restore Everything
+    CopyOrientAndPos(indyactor, player);
+	ResetCameraFOV(0, 0.0);
+    SetCameraLookInterp(2, 0);
+    SetCameraPosInterp(2, 0);
+    SetCameraInterpSpeed(2, 0);
+    Sleep(0.01);
+    SetCameraPosition(1, GetThingPos(cam2));
+    ClearThingFlags(player, 0x80000);
+    SetThingMaxHeadVel(indyactor, in_headRate);
+	SetThingMaxRotVel(indyactor, in_rotRate);
+	SetThingFlags(indyactor, 0x80000);
+    SetCurrentCamera(1);
+
+	//Give player gear...
+	SetInv(player, 82, 1); 
+	SetInvAvailable(player, 82, 1);
+
+    EndCutscene();
+    ClearActorFlags(player, 0x200000);
+        
+	return;
+        
+end

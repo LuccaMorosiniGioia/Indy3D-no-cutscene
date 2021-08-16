@@ -1,0 +1,65 @@
+# Jones 3D Cog Script
+#
+# shs_Dlog_sprokets.cog   Say the line, Indy.  
+#
+# [JWC]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ========================================================================================
+
+symbols
+
+message 	startup
+message 	crossed
+                                                          
+
+sound		in_moresprockets=Ss04j03.wav			local
+
+surface 	trigger
+
+thing		player					local
+thing  		cam1spot				nolink
+thing  	 	cam1look				nolink
+thing		offsetcam	  			nolink
+thing		offsettarg   			nolink
+
+flex		viewangle				local
+
+
+int			played=0				local
+
+end
+
+# ========================================================================================
+
+code
+
+startup:
+	
+      	
+	player = GetLocalPlayerThing();
+  	return;
+
+
+crossed:
+	
+	if ((GetSenderRef() == trigger) && (played == 0)) 
+	{
+		
+		
+	
+
+
+		# "This thing has more..."
+		PlayVoice(player, in_moresprockets, 1.0, 1);
+        
+		played=1; 
+       
+    }
+	
+return;
+     
+  
+
+end
