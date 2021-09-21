@@ -1,0 +1,64 @@
+# Jones 3D Cog Script
+#
+# lag_shipsight.cog
+#
+#
+# [DS & revised by HB]
+#
+# (C) 1998 LucasArts Entertainment Co. All Rights Reserved
+# ==============================================================================
+
+symbols
+    
+	message     startup
+	message     entered
+
+	keyframe	in_ltarmup=0in_leftarm_1_1.key	local
+    
+	sound		indyline=lg02j01.wav			local
+	sound		music0=mus_lag_japanship.wav	local
+
+	thing		player							local
+	thing		indyactor
+	thing		walkpos0
+	thing		walkpos1
+	thing		campos
+	thing		shippos
+	
+	sector		looksec
+
+	vector		playervec						local
+	vector		v_camspot						local
+
+	float		playery =0						local
+	float		playerx =0						local
+
+	int			direction=0						local
+	int			targdir=1						local		desc=0-north,1-south,2-east,3-west.
+	int			curcam							local
+	int			beenhere=0						local
+	int			cursound						local
+
+end
+
+# ========================================================================================
+
+code
+
+startup:
+
+    player = GetLocalPlayerThing();
+    return;
+
+entered:
+
+	if (beenhere == 1) return;
+	if(getsenderref() == looksec)
+	{
+		
+	}
+
+	return;
+
+end
+
