@@ -1,0 +1,221 @@
+# Jones 3D Cog Script
+#
+# TEO_Volod_Scene.cog
+#
+# Introduce Volodnikov as Indy overhears his Babylon plans 
+#
+# [SXC & revised by HB]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ==============================================================================
+
+symbols
+
+# ................................. MESSAGES ...................................
+
+	message		startup
+	message		crossed
+    message		callback
+	message		timer
+	
+# ................................. KEYFRAMES ..................................
+
+	keyframe	in_kneel=0in_stand6.key					local
+	keyframe	in_kneeldown=0in_stand1_bd_6.key		local # 32x
+	keyframe	in_kneelstand=0in_stand6_bd_1.key		local
+	
+	keyframe	vo_armsFold=vo_stand1_arms_front.key	local
+	keyframe	vo_armsBack=vo_stand2_arms_back.key		local
+	keyframe	vo_armsSide=vo_stand3_arms_side.key		local
+	keyframe	vo_thumpHands=vo_pie.key				local
+	keyframe	vo_walkFwd=vo_walk_fwd.key				local
+	keyframe	vo_walkLeft=vo_walk_left.key			local
+	keyframe	vo_walkRight=vo_walk_right.key			local
+    keyframe    in_kneel=in_crawl_idle.key              local
+
+	keyframe	vo_waveLeft=0vo_waveleft_pace.key		local
+	keyframe	vo_waveRight=0vo_waveright_pace.key		local
+	keyframe	vo_waveBoth=0vo_waveboth_pace.key		local
+	keyframe	vo_walkBothUp=0vo_bothup_pace.key		local
+	keyframe	vo_glasses=0vo_glasses_2_2.key			local
+	keyframe	vo_leftup=0vo_leftup_2_1.key			local
+	keyframe	vo_rightup=0vo_rightup_3_3.key			local
+	keyframe	vo_bothup=0vo_bothup_3_3.key			local
+
+# .................................. MODELS ....................................
+		
+    model  		mod_in=gen_in_shirt.3do					local
+	model  		mod_in_HandHat=hand_in_hat.3do 			local
+			
+	model  		mod_vo=gen_vo.3do						local 
+
+# .................................. SOUNDS ....................................
+    
+	sound       vo_stayalert=To02v01a.wav				local # 7.4 sec
+	sound       vo_failnot=To02v01b.wav					local # 9.6 sec
+
+	sound       russtheme=mus_teo_volodscene.wav        local
+
+# .................................. THINGS ....................................
+
+	thing		player									local
+    thing       newindypos
+							
+	thing		indyactor    							linkid=0
+    thing		volod	    							linkid=1
+
+	thing		spetz0									linkid=2
+    thing       spetz1                                  linkid=2
+    thing       spetz2                                  linkid=2
+    thing       spetz3                                  linkid=2
+
+    thing       spetzreal0                              linkid=2
+    thing       spetzreal1                              linkid=2
+    thing       spetzreal2                              linkid=2
+    thing       spetzreal3                              linkid=2
+    thing       spetzreal4                              linkid=2
+    thing       spetzreal5                              linkid=2
+    thing       spetzreal6                              linkid=2
+    thing       spetzreal7                              linkid=2
+    thing       spetzreal8                              linkid=2
+    thing       spetzreal9                              linkid=2
+												
+	thing		vol_cam_1			   					nolink
+	thing		vol_cam_2								nolink
+	thing		vol_cam_3								nolink
+
+	thing		vol_ct_1								nolink
+	thing		vol_ct_2								nolink
+
+	thing		vol_mk_1								nolink
+	thing		vol_mk_2								nolink
+	thing		vol_mk_3								nolink
+	thing		vol_mk_4								nolink
+	
+# ............................. WORLD REFERENCES ...............................
+			
+	surface		crosurf         						linkid=3
+    
+# ................................. VARIABLES ..................................
+		
+	int         isdone=0                                local
+						
+	int			in_keyTrack1							local
+	int			in_keyTrack2							local
+
+	int			pl_colltype								local
+
+	int			vo_keyTrack1							local
+	int			vo_keyTrack2							local
+							
+	int			sender									local
+	int			curSound								local
+	int			matAnimNum								local
+	int			didThisBefore=0							local
+
+	int			curCam									local
+    int         x                                       local
+    
+    cog         TEO_Commie_Grid     #Added by JM     
+    
+
+end
+
+# ==============================================================================
+
+code
+
+# ..............................................................................
+
+startup:
+
+	# Pointer to Player
+	player = GetLocalPlayerThing();
+    SetThingFlags(spetz0, 0x80000);
+    SetThingFlags(spetz1, 0x80000);
+    SetThingFlags(spetz2, 0x80000);
+    SetThingFlags(spetz3, 0x80000);
+
+    For (x=0; x<=9; x=x+1)
+    {
+        SetThingFlags(spetzreal0[x], 0x80000);
+    } 
+	      
+    return;
+
+# ..............................................................................
+
+crossed:
+
+    if ((GetSenderRef() == crosurf) && (GetSourceRef() == player) && (isdone == 0))
+    {   
+    	isdone = 1;
+    
+    
+    	# Mood music!
+        PlaySoundLocal(russtheme, 0.65, 0, 0, 0);
+    
+      
+  
+        
+        # Prep the Spetznaz...
+        ClearThingFlags(spetz0, 0x80000);
+        ClearThingFlags(spetz1, 0x80000);
+        ClearThingFlags(spetz2, 0x80000);
+        ClearThingFlags(spetz3, 0x80000);
+    	AISetCutSceneMode(spetz0);
+    	AISetCutSceneMode(spetz1);
+    	AISetCutSceneMode(spetz2);
+    	AISetCutSceneMode(spetz3);
+    	SetWeaponModel(spetz0, 4);	    
+    	SetWeaponModel(spetz1, 4);	
+    	SetWeaponModel(spetz2, 4);	    
+    	SetWeaponModel(spetz3, 4);	
+        
+        # Move spetznaz to correct positions...
+    	AISetMoveSpeed(spetz0, 1.0);
+        AISetMoveSpeed(spetz1, 1.0);
+    	AISetMoveSpeed(spetz2, 1.0);
+    	AISetMoveSpeed(spetz3, 1.0);
+    	AISetLookFrame(spetz0, 1);
+        AISetLookFrame(spetz1, 1);
+        AISetLookFrame(spetz2, 1);
+        AISetLookFrame(spetz3, 1);
+        AISetMoveFrame(spetz2, 1);
+        AISetMoveFrame(spetz3, 1);
+        Sleep(1.0);
+        AISetMoveFrame(spetz0, 1);
+        AISetMoveFrame(spetz1, 1);
+        Sleep(2.0);
+        AISetLookFrame(spetz0, 2);
+        AISetLookFrame(spetz1, 2);
+        AISetLookFrame(spetz2, 2);
+        AISetLookFrame(spetz3, 2);
+	Sleep(3.0);
+    	WaitForSound(cursound);
+    	
+    	DestroyThing(volod);
+    
+    	# Get rid of cutscene things...
+        DestroyThing(spetz0);
+        DestroyThing(spetz1);
+        DestroyThing(spetz2);
+        DestroyThing(spetz3);
+    
+        # Reveal the real Spetznaz with real AI's...
+    	For (x=0; x<=9; x=x+1)
+        {
+    		ClearThingFlags(spetzreal0[x], 0x80000);
+        } 
+    
+        
+        SendMessageEx(TEO_Commie_Grid, 27, 0, 0, 0, 0);     //Added by JM
+    }
+    
+return;
+
+# ..............................................................................
+
+end
+

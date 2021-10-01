@@ -1,0 +1,62 @@
+# Jones 3D Cog Script
+#
+# TEO_EnterGears
+#
+# A basic cutscene cog
+#
+# [SXC]
+#
+# (C) 1998 LucasArts Entertainment Co. All Rights Reserved
+# ========================================================================================
+
+symbols
+	message     startup
+	message     crossed
+   
+    keyframe    in_stand4=0in_stand4.key            local
+    keyframe    in_SideToHips=0in_stand1_bd_4.key   local
+    
+    surface     crosurf
+   
+	sound       indyline
+    sound       awesomewav=mus_gen_awesome3.wav     local
+       
+	thing       camera0
+    thing       cam_tgt0
+    thing       cam_tgt1
+    
+    #thing       actor_look_tgt0
+    
+	thing       player          local
+    thing       actorindy
+    
+    flex        moveSpeed=1
+    flex        cameraTime=5
+    int         chek=0          local
+    int         in_track0       local
+end
+
+# ========================================================================================
+
+code
+
+startup:
+
+	player = GetLocalPlayerThing();
+    
+return;
+
+#........................................................................................
+crossed:
+    if ((GetSenderRef() == crosurf) && (chek == 0))
+    {
+        chek = 1;
+        
+        
+    }        
+    return; 
+    
+#........................................................................................
+end
+
+

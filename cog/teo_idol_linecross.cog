@@ -1,0 +1,60 @@
+# Jones 3D Cog Script
+#
+# TEO_Idol_LineCross.cog
+#
+# Swings Camera around to indy's side during a short sayline
+#
+# [SXC]
+#
+# 11/23/98 SXC
+#
+# (C) 1998 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ========================================================================================
+
+symbols
+
+    message     startup
+    message     crossed
+
+    thing       player                  local
+    thing       actorindy
+    
+    thing       camera0
+    thing       camera0_tgt0
+    thing       camera0_tgt1
+    
+    keyframe    in_stand4=0in_stand4.key            local
+    keyframe    in_SideToHips=0in_stand1_bd_4.key   local
+    
+    surface     crossurf
+    
+    int         croscheck=0             local
+    int         cursound                local
+    int         in_track                local
+    int         in_track0               local
+    
+    sound       indyline0=to06j01.wav   local
+    sound       indyline1=to06j02.wav   local
+             
+end
+
+# ========================================================================================
+
+code
+
+startup:
+    player = GetLocalPlayerThing();
+    return;
+           
+# ========================================================================================
+crossed:
+    If ((GetSenderRef() == crossurf) && (croscheck == 0))
+    {
+        croscheck = 1;
+                                   
+    }
+    
+return;
+        
+end
