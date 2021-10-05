@@ -730,7 +730,7 @@ ringbell:
 	# Holy Woman turns toward Indy...
 	StopKey(oldlady, ol_keyTrack1, 0.5);
 	AISetLookThing(oldlady, indy);
-	Sleep(2.2);
+	# Sleep(2.2);
 
 	# Start Indy toward Holy Woman...
 	AISetMoveSpeed(indy, 1.0);
@@ -742,7 +742,7 @@ ringbell:
 	PlayKey(oldlady, ol_wavecane2, 4, 0x12, 0);
 	Sleep(0.5);
 	StopThing(oldlady); # stop that damn churning
-	PlayVoice(oldlady, ol_rang, 1.0, 1);
+	# PlayVoice(oldlady, ol_rang, 1.0, 1);
 
 	# Pan to frame both actors...
 	AIWaitForStop(indy);
@@ -751,45 +751,45 @@ ringbell:
 	AISetLookThing(oldlady, indy); # and she looks up
 
 	# Indy: "That's right, I did."
-	PlayKey(indy, in_ltarmup, 4, 0x12, 0);
-	PlayVoice(indy, in_thatsright, 1.0, 1);
+	# PlayKey(indy, in_ltarmup, 4, 0x12, 0);
+	# PlayVoice(indy, in_thatsright, 1.0, 1);
 
 	# Holy Woman: "And you want my help."
-	PlayVoice(oldlady, ol_wanthelp, 1.0, 1);
+	# PlayVoice(oldlady, ol_wanthelp, 1.0, 1);
 
 	# Cut to Indy over Holy Woman's shoulder...
 	Sleep(0.01);
 	SetCameraFocus(2, cam_4);
 	SetCameraSecondaryFocus(2, c_t5);
-	SetCameraFOV(37, 0, 0.0);
+	# SetCameraFOV(37, 0, 0.0);
 
 	# Indy: "Do I...I'm...lost."
-	curSound = PlayVoice(indy, in_lost, 1.0, 0);
-	Sleep(0.5);
-	PlayKey(indy, in_botharmsup, 4, 0x12, 0);
-	WaitForSound(curSound);
+	# curSound = PlayVoice(indy, in_lost, 1.0, 0);
+	# Sleep(0.5);
+	# PlayKey(indy, in_botharmsup, 4, 0x12, 0);
+	# WaitForSound(curSound);
 
 	# Cut to reverse on Holy Woman over Indy's shoulder...
 	SetCameraLookInterp(2, 0);
 	Sleep(0.01);
 	SetCameraFocus(2, cam_5);
 	SetCameraSecondaryFocus(2, c_t6);
-	SetCameraFOV(29, 0, 0.0);
+	# SetCameraFOV(29, 0, 0.0);
 
 	# Holy Woman: "But it is you who must help me...spinning idol...legacy..."
-	curSound = PlayVoice(oldlady, ol_youhelpme, 1.0, 0); # line split
+	# curSound = PlayVoice(oldlady, ol_youhelpme, 1.0, 0); # line split
 
 	# Long slow push in...
 	MoveToFrame(c_t6, 1, 0.01);
-	SetCameraFOV(22, 1, 15.0);
-	PlayKey(oldlady, ol_ltwave, 4, 0x12, 0);	
-	Sleep(7.5);
-	PlayKey(oldlady, ol_ltwave, 4, 0x12, 0);	
-	Sleep(2.5);
-	curSound = PlayVoice(oldlady, ol_evillegacy, 1.0, 0); #line split
-	Sleep(3.0);
-	PlayKey(oldlady, ol_wavecane2, 4, 0x12, 1);
-	WaitForSound(curSound);
+	# SetCameraFOV(22, 1, 15.0);
+	# PlayKey(oldlady, ol_ltwave, 4, 0x12, 0);	
+	# Sleep(7.5);
+	# PlayKey(oldlady, ol_ltwave, 4, 0x12, 0);	
+	# Sleep(2.5);
+	# curSound = PlayVoice(oldlady, ol_evillegacy, 1.0, 0); #line split
+	# Sleep(3.0);
+	# PlayKey(oldlady, ol_wavecane2, 4, 0x12, 1);
+	# WaitForSound(curSound);
 	Sleep(0.3); # take a beat
 
 	# Cut to Indy again...
@@ -800,8 +800,8 @@ ringbell:
 	SetCameraFOV(37, 0, 0.0);
 
 	# Indy: "Show me the way."
-	PlayKey(indy, in_rtarmup, 4, 0x12, 0);	
-	PlayVoice(indy, in_showmeway, 1.0, 1);
+	# PlayKey(indy, in_rtarmup, 4, 0x12, 0);	
+	# PlayVoice(indy, in_showmeway, 1.0, 1);
 
 	# Holy Woman turns and walks away from Indy...
 	StopKey(oldlady, ol_keyTrack1, 0.0);
@@ -810,7 +810,7 @@ ringbell:
 	Sleep(0.2);
 
 	# Holy Woman: "I am too old and infirm...golden treasure."
-	curSound = PlayVoice(oldlady, ol_goldtreasure, 1.0, 0); # line split
+	# curSound = PlayVoice(oldlady, ol_goldtreasure, 1.0, 0); # line split
 
 	# Dolly back to keep her framed...
 	AISetMoveSpeed(oldlady, 0.7);
@@ -825,7 +825,7 @@ ringbell:
 	headLookThing = oldlady;
 	AIEnableHeadTracking(indy, headLookThing);
 	AIWaitForStop(oldlady);
-	Sleep(6.5);
+	# Sleep(6.5);
 
 	# Holy Woman turns back toward Indy...
 	AIEnableHeadTracking(oldlady, indy);
@@ -847,29 +847,29 @@ ringbell:
 	AISetLookThing(indy, oldlady);
 
 	# Indy: "Okay...golden treasure..."
-	WaitForSound(curSound);
-	curSound = PlayVoice(indy, in_whereisit, 1.0, 0);
-	Sleep(1.5);
-	PlayKey(indy, in_ltarmup, 4, 0x12, 0);
-	WaitForSound(curSound);
+	# WaitForSound(curSound);
+	# curSound = PlayVoice(indy, in_whereisit, 1.0, 0);
+	# Sleep(1.5);
+	# PlayKey(indy, in_ltarmup, 4, 0x12, 0);
+	# WaitForSound(curSound);
 
 	# Cut to single shot of Holy Woman...
 	SetCameraPosInterp(2, 0);
 	Sleep(0.01);
 	SetCameraFocus(2, cam_7);
 	SetCameraSecondaryFocus(2, c_t8);
-	SetCameraFOV(35, 0, 0.0);
+	# SetCameraFOV(35, 0, 0.0);
 	SetThingFlags(indy, 0x10); # invisible
 
 	# Holy Woman: "Why, in the treasury, of course!"
-	curSound = PlayVoice(oldlady, ol_treasury, 1.0, 0);
-	Sleep(0.5);
-	PlayKey(oldlady, ol_wavecane2, 4, 0x12, 1);
-	StopKey(oldlady, ol_keyTrack1, 0.0);
+	# curSound = PlayVoice(oldlady, ol_treasury, 1.0, 0);
+	# Sleep(0.5);
+	# PlayKey(oldlady, ol_wavecane2, 4, 0x12, 1);
+	# StopKey(oldlady, ol_keyTrack1, 0.0);
 	ol_keyTrack1 = PlayKey(oldlady, ol_standwkey, 2, 0x10, 0);
 	ol_swapCase = 1; # swap oldlady key hand
 	PlayKey(oldlady, ol_showkey, 4, 0x12, 0);
-	WaitForSound(curSound);
+	# WaitForSound(curSound);
 	Sleep(0.3);
 
 	# Cut to full side shot of both actors...
@@ -879,7 +879,7 @@ ringbell:
 	ClearThingFlags(indy, 0x10); # visible again
 
 	# Holy Woman: "Take this, it may help you."
-	curSound = PlayVoice(oldlady, ol_takekey, 1.0, 0);
+	# curSound = PlayVoice(oldlady, ol_takekey, 1.0, 0);
 
 	# She gives Indy the key...
 	Sleep(1.5);
@@ -889,7 +889,7 @@ ringbell:
 	in_swapCase = 1; # swap indy key hand
 	PlayKey(indy, in_takekey, 4, 0x12, 1);
 	StopKey(oldlady, ol_keyTrack1, 0.5);
-	WaitForSound(curSound);
+	# WaitForSound(curSound);
 
 	# Key zips into inventory...
 	ChangeInv(player, oldladykey, 1.0); # add key to inventory bin
@@ -1259,11 +1259,11 @@ givetreasure:
 	# gestures
 
 	# Holy Woman: "You again.  Do you have the treasure?"
-	PlayVoice(oldlady, ol_gottreasure, 1.0, 1);
+	# PlayVoice(oldlady, ol_gottreasure, 1.0, 1);
 
 	# Indy: "Here's the best I could do..."
 	in_swapCase = 2; # indy swapping plant
-	curSound = PlayVoice(indy, in_bestdo, 1.0, 0);
+	# curSound = PlayVoice(indy, in_bestdo, 1.0, 0);
 	PlayKey(indy, in_plantready, 2, 0x12, 1);
 
 	# Indy gives her the budding plant...
@@ -1288,8 +1288,8 @@ givetreasure:
 
 	# Holy Woman: "Not yet."
 	ol_keyTrack1 = PlayKey(oldlady, ol_lookatbud, 2, 0x14, 0);
-	WaitForSound(curSound);
-	PlayVoice(oldlady, ol_notyet, 1.0, 1);
+	# WaitForSound(curSound);
+	# PlayVoice(oldlady, ol_notyet, 1.0, 1);
 	Sleep(0.25);
 
 	# Lose plant from Indy's inventory...
@@ -1336,7 +1336,7 @@ givetreasure:
     yl_swapCase = 1; # RT: So we know when to start VFX
 	PlayKey(younglady, yl_transform, 4, 0x12, 0);
 
-	Sleep(1.5);
+	# Sleep(1.5);
 
 	# Cut to Indy reacting...
 	CopyOrientAndPos(in_mk5, indy); # move indy into position
@@ -1374,13 +1374,13 @@ givetreasure:
 	PlaySoundLocal(sndCaneThrow, 1.0, 0, 0x0000, 0);
 
 	# Holy Woman: "Ahhh!  Your gift is great!  Now..."
-	curSound = PlayVoice(younglady, yl_greatgift, 1.0, 0);
+	# curSound = PlayVoice(younglady, yl_greatgift, 1.0, 0);
 
 	# Cane disappears...
 	Sleep(0.5);
 	StopKey(flyingcane, can_keyTrack1, 0.0);
 	SetThingFlags(flyingcane, 0x80000); # cane is gone
-	WaitForSound(curSound);
+	# WaitForSound(curSound);
     
 	# music
 	PlaySoundLocal(musStrange, .5, 0, 0x0000, 0);
@@ -1468,11 +1468,11 @@ givetreasure:
 	ClearThingFlags(rdooropen, 0x80000);
 
 	# Holy Woman: "Here is the way to the Babylonian curse..."
-	curSound = PlayVoice(younglady, yl_waytocurse, 1.0, 0);
-	PlayKey(younglady, yl_armspointway, 4, 0x12, 1);
-	Sleep(1.5);
-	PlayKey(younglady, yl_armsup, 4, 0x12, 1);
-	WaitForSound(curSound);
+	# curSound = PlayVoice(younglady, yl_waytocurse, 1.0, 0);
+	# PlayKey(younglady, yl_armspointway, 4, 0x12, 1);
+	  Sleep(0.1);
+	# PlayKey(younglady, yl_armsup, 4, 0x12, 1);
+	# WaitForSound(curSound);
 
 	# play music
 	PlaySoundLocal(musEerie, .5, 0.0, 0x0, 0);
