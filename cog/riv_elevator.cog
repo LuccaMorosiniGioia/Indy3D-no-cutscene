@@ -309,6 +309,8 @@ pullLever:
     ClearThingFlags(player, 0x80000);
     ClearActorFlags(player, 0x200000);
     
+	elevator_Ready = 1;
+	
     # return camera to player
     SetCurrentCamera(1);
     
@@ -346,7 +348,6 @@ pullLever:
     
     lever_Ready = 1;
     wheel_Ready = 1;
-    elevator_Ready = 1;
     
     SetTimer(10.0);
     
