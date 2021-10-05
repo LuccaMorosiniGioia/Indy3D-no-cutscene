@@ -288,6 +288,8 @@ Activate:
 
 callback:					#wait for torp starting animation
 
+	destroything(inviso_torp);
+
 	CopyOrientAndPos(Indyactor, player);
 	EndCutscene();
 	SetCurrentCamera(curcam);
@@ -318,16 +320,15 @@ callback:					#wait for torp starting animation
 	blown=1;
 	SendMessage(hints, user1);
 	destroything(torpedo);
-	destroything(inviso_torp);
 	call explode;
-	for(k=0; k<pieces; k=k+1)                                                        	            
-	{
-		SetPOVShake('0.0 0.02 0.05', '0.0 0.0 0.0', 80.0, 0.80);
-		fragment = CreateThing(debris0[RandBetween(0, 4)], expos);                                 
-		SetThingVel(fragment, VectorScale(VectorAdd(RandVec(), '-0.5 -0.5 -0.2'), 3));
-		SetThingRotVel(fragment, VectorScale(VectorAdd(RandVec(), '0.0 0.0 0.0'), 300.0));
-		sleep(0.025);
-	}
+	# for(k=0; k<pieces; k=k+1)                                                        	            
+	# {
+	# 	SetPOVShake('0.0 0.02 0.05', '0.0 0.0 0.0', 80.0, 0.80);
+	#	fragment = CreateThing(debris0[RandBetween(0, 4)], expos);                                 
+	#	SetThingVel(fragment, VectorScale(VectorAdd(RandVec(), '-0.5 -0.5 -0.2'), 3));
+	#	SetThingRotVel(fragment, VectorScale(VectorAdd(RandVec(), '0.0 0.0 0.0'), 300.0));
+	#	sleep(0.025);
+	# }
 	sleep(1.0);
 	return;
 
