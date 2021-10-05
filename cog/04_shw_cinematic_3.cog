@@ -1,0 +1,425 @@
+# Jones 3D Cog Script
+#
+# 04_SHW_Cinematic_3.cog
+#
+# Holy Woman directs Indy toward Palawan 
+#
+# [HB] effects added by Chris McGee
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ===================================================================
+
+symbols
+
+# **************************** MESSAGES *****************************
+
+	message		startup
+	message		activated
+	message		arrived
+	message		timer
+	message		callback
+	message		pulse
+	
+# **************************** KEYFRAMES ****************************
+
+	keyframe	in_ltarmup=0in_leftarm_1_1.key			local
+	keyframe	in_rtarmup=0in_armsout_1_1.key			local
+	keyframe	in_activate=in_activate_medium.key		local
+
+	keyframe	in_pullIMP=0in_pull_imp_1_17.key		local
+	keyframe	in_holdIMP=0in_stand17.key				local
+	keyframe	in_examIMP=0in_examimp_17_17.key		local
+	keyframe	in_putIMP=0in_put_imp_17_1.key			local
+
+	keyframe	yl_wave=0yl_wave_1_1.key				local
+	keyframe	yl_refuse=0yl_terrified_1_1.key			local
+	keyframe	yl_relic=0yl_arelic_1_1.key				local
+	keyframe	yl_taklit=0yl_taklit_1_1.key			local
+	keyframe	yl_thispath=0yl_followpath_1.key		local
+
+# ***************************** MODELS ******************************
+		
+	model		mod_imp1=imp1_vibrat.3do				local
+	
+# ***************************** SOUNDS ******************************
+    
+	sound		in_here=Sw02j01.wav						local
+	sound		yl_takeaway=Sw02y02.wav					local
+	sound		in_whatisit=Sw02j03.wav					local
+	sound		yl_terrible=Sw02y04.wav					local
+	sound		in_yesmore=Sw02j05.wav					local # 2.4s
+	sound		yl_taklitexpo=Sw02y06.wav				local
+	sound		in_pacific=Sw02j07.wav					local
+	sound		yl_palawan=Sw02y08.wav					local # 11.2s
+
+	sound		dr_open=sea_doors_open_c.wav			local
+	sound		dr_close=sea_doors_close_c.wav			local
+
+# ***************************** THINGS ******************************
+
+	thing		player									local
+							
+	thing		indy	    							linkid=0
+    thing		younglady								nolink
+
+	thing		enterdoor
+	thing		doorswitch
+	thing		exitdoor
+	thing		whichdoor								local # var
+
+	thing		cam_1									nolink
+	thing		cam_2a									nolink
+	thing		cam_2b									nolink
+	thing		cam_3									nolink
+	thing		cam_4									nolink
+	thing		cam_5									nolink
+	thing		cam_6									nolink
+	thing		cam_7									nolink
+	
+	thing		ct_0									nolink
+	thing		ct_1									nolink
+	thing		ct_2									nolink
+	thing		ct_3									nolink
+	thing		ct_4									nolink
+	thing		ct_5									nolink
+	thing		ct_6									nolink
+	thing		ct_7									nolink
+	thing		ct_8									nolink
+
+	thing		in_mk_0									nolink
+	thing		in_mk_1									nolink
+	thing		in_mk_2									nolink
+	thing		in_mk_3									nolink
+
+	thing		yl_mk_1									nolink
+
+	thing		fadeplate								nolink
+
+# ************************ ENGINE WEIRDNESS *************************
+
+	template    ghost_tpl=ghost							local
+	
+# *************************** VARIABLES *****************************
+			
+	flex		duration=1.5							local
+	flex		sleeptime=4.0							local
+	
+	flex		in_rotRate								local
+
+	flex		youngladyCollSize						local
+	flex		yl_rotRate								local
+
+#	flex		trackRate=0.1							local
+	
+	int			didThisBefore=0							local
+
+	int			enterdooropen=0							local
+	int			exitdooropen=0							local
+	
+	int			in_swapCase=0							local
+	int			in_swapRef								local
+
+	int			in_keyTrack1							local
+
+	int			youngladyCollType						local
+	
+	int			sender									local
+	int			swapper									local
+	int			curCam									local
+	int			curSound								local
+	int			curMusic								local
+
+# ************************* SUBROUTINES *****************************
+
+	flex		OpenDoor								local
+	flex		CloseDoor								local
+
+# ******************** FX COMPONENTS by McGee************************
+
+# --------------templates-------------    
+	
+	template	ring=+ripples_vert	local
+    template	orb=lensflarew		local
+
+# --------------vectors------------- 
+   
+	vector	ringstart			local  
+	vector	ringend				local
+
+	vector	orbstart			local	
+	vector	orbend				local
+
+# --------------variables-------------
+
+	int		ringtrack			local
+	int		orbtrack			local    
+	int		birdloop			local    
+
+# --------------things-------------    
+
+	thing		ringspot		local
+
+# --------------sound-------------    
+
+	sound		fademagic=nub_charged_pad_c.wav			local
+	sound		happybirds=shw_birds.wav				local
+ 	sound		endmusic=mus_tem_tiki2int.wav			local
+
+end
+
+# ===================================================================
+
+code
+
+# ...................................................................
+
+startup:
+
+	# Pointer to Player
+	player = GetLocalPlayerThing();
+	
+	# Prep Indy...
+	in_rotRate = GetThingMaxRotVel(indy);
+
+	# Prep Young Holy Woman...
+	SetThingFlags(younglady, 0x80000);
+	youngladyCollSize = GetThingCollideSize(younglady);
+	youngladyCollType = GetCollideType(younglady);
+	yl_rotRate = GetThingMaxRotVel(younglady);
+	
+	SetThingMass(younglady, 0); # no mass for the woman  cmg
+
+	SetThingAlpha(fadeplate, 0.0);
+
+	# set fx anim vectors
+	ringstart	= VectorSet(0.05, 0.05, 0.5);
+	ringend	= VectorSet(0.125, 0.2, 0.0);
+	orbstart	= VectorSet(0.05, 0.05, 0.0);
+	orbend	= VectorSet(0.2, 0.2, 1.0);
+
+	return;
+
+# ...................................................................
+    
+activated:
+
+	sender = GetSenderRef();
+
+	if (sender != doorswitch)
+	{
+		return;
+	}	
+	
+	if(didThisBefore != 0)
+	{
+		return;
+    }
+
+	didThisBefore = 1;
+
+	StartCutscene(1);
+
+	# Prep Holy Woman...
+	ClearThingFlags(younglady, 0x80000);
+	AISetCutSceneMode(younglady);
+	
+	# Disable player...
+	MakeMeStop();
+	DeselectWeaponWait(player); # get hands free
+	
+	# Prep camera & cut to shot over Indy's shoulder...
+	curCam = GetCurrentCamera();
+	SetCameraLookInterp(2, 0); # no pan & tilt
+	SetCameraPosInterp(2, 0); # no dolly
+	SetCameraFocus(2, cam_1);
+	SetCameraSecondaryFocus(2, ct_0);
+	SetCurrentCamera(2);
+	SetCameraFOV(55, 0, 0.0);
+	Sleep(0.01);
+	
+	# Swap in our actor...
+	SetThingFlags(player, 0x80000); # hide player
+	ClearThingFlags(indy, 0x80000); # show actor
+	CopyPlayerHolsters(player, indy); # match props
+
+	# Push the button...
+	PlayKey(indy, in_activate, 4, 0x12, 0);
+	Sleep(0.2);
+	MoveToFrame(doorswitch, 1, 1.0);
+	Sleep(1.0);
+	
+	# Open the door...
+	whichdoor = enterdoor;
+	call OpenDoor;
+
+	# Pan to watch door swing open...
+	SetCameraLookInterp(2, 1); # enable pan & tilt
+	SetCameraInterpSpeed(2, 2.0);
+	Sleep(0.01);
+	SetCameraSecondaryFocus(2, ct_1);
+	SetCameraFOV(45, 1, 2.0);
+	
+	# Indy turns toward the opening door...
+	SetThingMaxRotVel(indy, 100.0); # make indy turn slowly
+	AISetLookThing(indy, ct_1);
+	AISetLookThing(younglady, indy);
+	
+	# Wait for door to finish opening...
+	while (enterdooropen == 0)
+	{
+	 	Sleep(0.01); 
+	}
+
+	# Holy Woman waves to Indy...
+	Sleep(0.2);
+	PlayKey(younglady, yl_wave, 4, 0x12, 0);
+	Sleep(1.2);
+
+	# Cut to Indy from courtyard...
+	SetCameraLookInterp(2, 0);
+	SetCameraFocus(2, cam_2a);
+	SetCameraSecondaryFocus(2, ct_2);
+	SetCameraFOV(45, 0, 0.0);
+
+	# Walk Indy to Holy Woman...
+	SetCollideType(indy, 0);
+	SetCollideType(younglady, 0);
+	SetThingMaxRotVel(indy, in_rotRate); # reset
+	TeleportThing(indy, in_mk_0); # make sure Indy is correctly positioned
+	Sleep(0.01);
+	AISetMoveSpeed(indy, 1.1);
+	AISetLookThingEyeLevel(indy, in_mk_1);
+	AIEnableHeadTracking(indy, younglady);
+	AIEnableBodyTracking(younglady, indy);
+	AISetMoveThing(indy, in_mk_1, 0);
+	Sleep(0.01);
+	
+	# Pivot camera to follow...
+	MoveToFrame(ct_2, 1, 0.66); # was 0.65
+	Sleep(0.01);
+	SetCameraPosInterp(2, 1); # enable dolly mode
+	SetCameraInterpSpeed(2, 6.0);
+	SetCameraFOV(98, 1, 4.0); # was 95
+	SetCameraFocus(2, cam_2b);
+	Sleep(4.0);
+	AIDisableHeadTracking(indy);
+	AIDisableBodyTracking(younglady);
+	Sleep(1.2);
+	SetCameraFOV(68, 1, 0.8);
+	AIWaitForStop(indy);
+	
+	
+
+	# End...
+	SetCameraLookInterp(2, 0);
+	SetCameraPosInterp(2, 0);
+	ThingFadeAnim(fadeplate, 0.0, 1.0, 1.0, 0);
+	Sleep(2.0);
+    EndCutscene();
+    StopSound(birdloop, 0.0);
+	JonesEndLevel();	#cmg
+
+	# Meanwhile, temp clean up...
+	#DestroyThing(younglady);
+	#DestroyThing(indy);
+	#ClearThingFlags(player, 0x80000); # player in world
+	#ResetThing(player);
+	#ClearActorFlags(player, 0x200000); # restore player control
+	#SetCurrentCamera(curCam);
+	#ResetCameraFOV(0, 0.0);
+   
+	return;
+
+# ...................................................................
+
+arrived:
+
+	if(GetSenderRef() == enterDoor)
+	{
+		if (enterdooropen == 0) # means door was closed
+		{
+			SetTimer(sleepTime);
+			enterdooropen = 1; # enterdoor is open
+		}
+		else
+		{
+			MoveToFrame(doorswitch, 0, 1.0);
+			enterdooropen = 0; # enterdoor is closed
+		}
+	}
+	
+	if(GetSenderRef() == exitDoor)
+	{
+		if (exitdooropen == 0) # means door was closed
+		{
+			exitdooropen = 1; # exitdoor is open
+		}
+		else
+		{
+			exitdooropen = 0; # exitdoor is closed
+		}
+	}
+
+	return;
+
+# ...................................................................
+
+timer:
+
+	call CloseDoor;
+
+	return;
+
+# ...................................................................
+
+callback:
+
+	swapper = GetSenderRef();
+    
+	if (swapper == indy)
+	{
+        if (in_swapCase == 1)
+		{
+            # Swap IMP #1 in...
+			in_swapRef = SetThingMesh(indy, 15, mod_imp1, 0);
+		}
+		else if (in_swapCase == 2)
+		{
+			# Get rid of the IMP
+			RestoreThingMesh(indy, in_swapRef);
+		}
+	}
+ 
+    return;
+
+# ...................................................................
+
+pulse:
+
+	ringtrack = CreateThing(ring, ringspot);
+	AnimateSpriteSize(ringtrack, ringstart, ringend, 0.5);
+
+	return;
+    
+# ...................................................................
+
+OpenDoor:
+
+	Rotate(whichDoor, 90, 1, duration);
+	PlaySoundThing(dr_open, whichDoor, 1, 5, 10, 0);
+
+	return;
+
+# ...................................................................
+
+CloseDoor:
+
+	Rotate(whichDoor, -90, 1, duration);
+	PlaySoundThing(dr_close, whichDoor, 1, 5, 10, 0);
+
+	return;
+
+# ...................................................................
+
+end

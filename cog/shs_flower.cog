@@ -695,6 +695,8 @@ entered:
 		{
 			return;
 		}
+		
+		n_ShutterOpen = 1;
 
 		# Prep
 		ResetCameraFOV(0, 0.0);
@@ -703,27 +705,11 @@ entered:
 		TeleportThing(flower_indy, t_player);
 		AISetCutSceneMode(flower_indy);
 
-
-		# Housekeeping...
-		SetCameraPosition(1, GetThingPos(whipcam_2));	# prep for camera to swing back
-		CopyOrientAndPos(flower_indy, t_player);
-		SetThingFlags(flower_indy, 0x80000);
-		ClearActorFlags(t_player, 0x200000);
-		ClearThingFlags(t_player, 0x80000); 
-		SetCameraLookInterp(2, 0); # kill pan & tilt mode
-		SetCameraPosInterp(2, 0); # kill dolly mode
-		Sleep(0.01);
-		SetCurrentCamera(curCam);
-		ResetCameraFOV(0, 0.0);
-		EndCutscene();
-
 		# Switch camera
 		#SetCameraFocus(2, whipCam_1);
 		#SetCameraSecondaryFocus(2, t_player);
 		#SetCurrentCamera(2);
 		#SetCameraFOV(70, 0, 0.0);
-
-		n_ShutterOpen = 1;
 
 		# move pad down
 		MoveToFrame(pad, 1, 2);
@@ -747,6 +733,19 @@ entered:
 
 		ClearThingFlags(sunlight,0x80000);
 		ThingFadeAnim(sunlight, 0, 1, 0.5, 0);
+		
+		# Housekeeping...
+		SetCameraPosition(1, GetThingPos(whipcam_2));	# prep for camera to swing back
+		CopyOrientAndPos(flower_indy, t_player);
+		SetThingFlags(flower_indy, 0x80000);
+		ClearActorFlags(t_player, 0x200000);
+		ClearThingFlags(t_player, 0x80000); 
+		SetCameraLookInterp(2, 0); # kill pan & tilt mode
+		SetCameraPosInterp(2, 0); # kill dolly mode
+		Sleep(0.01);
+		SetCurrentCamera(curCam);
+		ResetCameraFOV(0, 0.0);
+		EndCutscene();
 
 		# Turn Indy
 		#CopyPlayerHolsters(t_player, flower_indy);
