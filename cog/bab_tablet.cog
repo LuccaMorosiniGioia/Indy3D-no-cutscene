@@ -527,7 +527,8 @@ activate:
 	ResetCameraFOV(0, 0.0);
 	Sleep(0.3);
 	EndCutscene();
-	ClearActorFlags(player, 0x200000);   
+	ClearActorFlags(player, 0x200000);
+	Call camfinish;	
         
         //rotate door
         Rotate(roundmapdoor, 179, 1, 5);
@@ -553,7 +554,7 @@ activate:
         WaitForStop(hiddendoor);
         SetCollideType(hiddendoor, 3);
         
-	Call camfinish;
+	
 			
         SendMessage(hintcog, user0);
     }
@@ -722,9 +723,9 @@ setcamstuff:
 
 camfinish:
 
-	//TeleportThing(player, tabindy);
-	//SetThingFlags(tabindy, 0x80000);
-	//ClearThingFlags(player, 0x80000);
+	TeleportThing(player, tabindy);
+	SetThingFlags(tabindy, 0x80000);
+	ClearThingFlags(player, 0x80000);
 	if (sender == gear_assembly)
 	{
 		//SetCameraPosition(1, GetThingPos(elev_cam0));
@@ -747,11 +748,11 @@ camfinish:
 	}
 	Sleep(0.1);
 	      
-	//SetCurrentCamera(1);
-	//ResetCameraFOV(0, 0.0);
-	//Sleep(0.3);
-	//EndCutscene();
-	//ClearActorFlags(player, 0x200000);
+	SetCurrentCamera(1);
+	ResetCameraFOV(0, 0.0);
+	Sleep(0.3);
+	EndCutscene();
+	ClearActorFlags(player, 0x200000);
 
 	return;
 
