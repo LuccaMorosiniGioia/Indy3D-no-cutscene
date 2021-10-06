@@ -1,0 +1,247 @@
+# Jones 3D Cog Script
+#
+# 10_SEA_Alarm.cog
+#
+# Guard warns Volodnikov that Jones has escaped
+#
+# [HB]
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ==============================================================================
+
+symbols
+
+# .................................. MESSAGES ..................................
+
+	message		startup
+	message		activated
+	message		arrived
+	message		callback
+	message		user4 # to note player has weapons	
+	
+# .................................. KEYFRAMES .................................
+	
+	keyframe	vo_armsATback=vo_stand2_arms_back.key	local
+	keyframe	vo_glasses=0vo_alarmglasses_2_2.key		local
+	keyframe	vo_leftup3=0vo_leftup_3_3.key			local
+	keyframe	vo_bothup=0vo_bothup_3_3.key			local
+		
+# .................................. MODELS ....................................
+
+	model  		mod_vo_head=head_vo_noglasses.3do		local
+	model  		mod_vo_glasses=hand_vo_glasses.3do		local
+
+# .................................. SOUNDS ....................................
+
+	sound		sl_jonesescaped=Se05r01.wav				local
+	sound		vo_retakehim=Se05v02.wav				local
+	sound		sl_understood=Se05r03.wav				local
+
+	sound		dr_open=sea_doors_open_c.wav			local
+	sound		dr_close=sea_doors_close_c.wav			local
+
+#	sound		music0=mus_gen_russremin2.wav			local
+	
+# ............................... ACTOR THINGS .................................
+
+	thing		bowdoorswitch
+	thing		bowdoor
+	thing		player									local
+	thing		alarm_sailor							nolink
+	thing		alarm_volod								nolink
+ 	
+# .............................. OBJECT THINGS .................................
+
+	thing		alarm_door								nolink
+	thing		alarm_desk								nolink
+	thing		alarm_lamp								nolink
+
+# .............................. CAMERA THINGS .................................
+
+	thing		alarm_cam_1								nolink
+		
+	thing		alarm_ct_1								nolink
+	thing		alarm_ct_2								nolink
+
+	
+# .............................. TARGET THINGS .................................
+
+	thing		alarm_mk_1								nolink
+	thing		alarm_mk_2								nolink
+
+# ........................ OTHER ENGINE REFERENCES .............................
+
+	cog			bowdoorcog
+	
+	# sector		startsector
+
+# ............................... VARIABLES ....................................
+	
+	flex		sl_rotRate								local
+	flex		sl_headRate								local
+	flex		vo_rotRate								local
+	flex		vo_headRate								local
+
+	flex		duration=1.5							local
+
+	int			cutSceneState=0							local
+	int			gotweapons=0							local
+
+	int			vo_keyTrack1							local
+	int			vo_keyTrack2
+
+	int			vo_swapitem1							local
+	int			vo_swapitem2							local
+
+	int			cursound								local
+	int			curcam									local
+
+	int			sl_colltype								local
+
+	int			callbackNum								local
+
+# .............................. SUBROUTINES ...................................
+
+	flex		opendoor								local
+	flex		closedoor								local
+	flex		entersailor								local
+	
+end
+
+# ==============================================================================
+
+code
+
+# ..............................................................................
+
+startup:
+
+	# Prepare for much later...
+	SetThingFlags(alarm_sailor, 0x80000);
+	SetThingFlags(alarm_volod, 0x80000);
+	cutSceneState = 0;
+
+	return;
+
+# ..............................................................................
+
+user4:
+
+	# stop cutscene until player has retrieved his weapons...
+	gotweapons = 1;
+	return;
+
+# ..............................................................................
+
+activated:
+
+	if (gotweapons == 0)
+	{
+		# No cutscene until player has his weapons...
+		return;
+	}
+	
+	if (GetSenderRef() != bowdoorswitch)
+	{
+		# Must be triggered by correct switch...
+		return;
+	}
+
+	if (cutSceneState != 0)
+	{
+		# Only run cutscene once...
+		return;
+	}
+
+	# Prep engine...
+	cutSceneState = 1;
+	player = GetLocalPlayerThing();
+
+	SendMessage(bowdoorcog, user5); # keep bow door open
+
+	# Wait for the bowdoor to fully open...
+
+	return;
+
+# ..............................................................................
+
+arrived:
+
+	if (GetSenderRef() != bowdoor)
+	{
+		# Continue only when bowdoor is fully open...
+		return;
+	}
+
+	if (cutSceneState != 1)
+	{
+		# Only respond on first fully open arrival...
+		return;
+	}
+	
+	# Prep...
+	cutSceneState = 2;
+	ClearThingFlags(alarm_volod, 0x80000);
+	ClearThingFlags(alarm_sailor, 0x80000);
+	AISetCutSceneMode(alarm_volod);
+	AISetCutSceneMode(alarm_sailor);
+	
+
+	DestroyThing(alarm_sailor);
+	DestroyThing(alarm_volod);
+	ClearThingFlags(alarm_desk, 0x80000);
+	ClearThingFlags(alarm_lamp, 0x80000);
+
+
+	Sleep(4.0);
+	SendMessage(bowdoorcog, user6); # allow bow door to close
+	
+	return;
+
+# ..............................................................................
+
+callback:
+
+	if (GetSenderRef() != alarm_volod) return;
+
+    callbackNum = GetParam(1);
+
+	if (callbackNum == 21)
+	{
+	}
+	else if (callbackNum == 22)
+	{
+
+		Call opendoor;
+		Call entersailor;
+	}
+
+	return;
+
+# ..............................................................................
+
+opendoor:
+
+	Rotate(alarm_door, -90, 1, duration);
+	PlaySoundThing(dr_open, alarm_door, 1, 5, 10, 0);
+	return;
+
+# ..............................................................................
+
+closedoor:
+
+	Rotate(alarm_door, 90, 1, duration);
+	Sleep(0.5);
+	PlaySoundThing(dr_close, alarm_door, 1, 5, 10, 0);
+	return;
+
+# ..............................................................................
+
+entersailor:
+
+	
+
+	return;
+
+end
