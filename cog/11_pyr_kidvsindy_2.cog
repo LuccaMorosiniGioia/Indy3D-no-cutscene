@@ -304,6 +304,8 @@ entered:
 
 	playergone = 0; # reset every entry
 
+
+
 	if (sender == resetface)
 	{
 		# Reset semaphor...
@@ -356,6 +358,12 @@ entered:
 			return;
 		}
 	}
+	if (GetInv(player, hornerwatch) == 1)
+	{
+
+		call exchange;
+		return;		
+	}
 
 //Print("moviecog entered-->");
 
@@ -381,7 +389,6 @@ entered:
 	else
 	{
 		call firstintro;
-		return;
 	}
 
 	call backtoplay;
@@ -444,51 +451,6 @@ firstintro:
 
 	# Turn off future saylines at mine tunnel cave-in...
 	SendMessage(caveincog, user1);
-	
-	# Establish a target near Indy...
-	v_targetpos = VectorAdd(VectorTransformToOrient(indy, '0.0 0.05 0.0'), GetThingPos(indy));	
-	targetsector = FindNewSectorFromThing(indy, v_targetpos);
-	indyCamTarget =
-		CreateThingAtPos(tpl_ghost, targetsector, v_targetpos, '0 0 0');
-	CaptureThing(indyCamTarget); # no capture, no work
-	AttachThingToThing(indyCamTarget, indy); # track his move
-	
-	# Cut to long shot of Indy...
-	SetCameraLookInterp(2, 0);
-	SetCameraPosInterp(2, 0);
-	SetCameraFocus(2, cam_1);
-	SetCameraSecondaryFocus(2, indyCamTarget);
-	SetCurrentCamera(2);
-	SetCameraFOV(65, 0, 0.0);
-
-	# Walk Indy to the edge of the trestle...
-	AISetMoveSpeed(indy, 1.1);
-	AISetLookThing(indy, in_mk_1);
-	AISetMoveThing(indy, in_mk_1, 0);
-	AIWaitForStop(indy);
-	AISetLookThing(indy, gem);
-
-	# Pan to watch Indy stare across at the tunnel...
-	PlaySoundLocal(glintmusic, .6, 0, 0, 0);
-	AISetLookThing(indy, gem);
-	SetCameraLookInterp(2, 1);
-	SetCameraPosInterp(2, 1);
-	SetCameraInterpSpeed(2, 2.5);
-	Sleep(0.01);
-	SetCameraFocus(2, cam_2);
-	SetCameraSecondaryFocus(2, ct_1);
-	SetCameraFOV(80, 1, 2.5);
-	Sleep(0.7);
-		
-	# Indy sees the sparkle...
-	SetMaterialCel(sparkmat, 0);
-	AnimateSpriteSize(sparkle, '0.01 0.01 0.0', '0.2 0.2 1.0', .25);
-	MaterialAnim(sparkmat, 20, 1);
-	Sleep(0.5);
-    AnimateSpriteSize(sparkle, '0.2 0.2 1.0', '0.01 0.01 0.0', .25);
-	Sleep(0.25);
-
-	whichcam = cam_1; # in case of early return
 
 	# Kid will not appear until hyenas are gone...
 	if (global8 >= 11)
@@ -626,67 +588,7 @@ firstvisit:
 	# Continue with kid...
 	cutSceneState = 2;
 	entercam = cam_5;
-	call nukidenter;
-
-	# Indy turns to spot the kid's approach...
-	SetThingMaxRotVel(indy, 150.0);
-	AISetLookThing(indy, nu_mk_2);
-	Sleep(0.5);
-
-	# Camera moves in on the pair...
-	SetCameraInterpSpeed(2, 12.0);
-	SetCameraLookInterp(2, 1);
-	Sleep(0.01);
-	SetCameraFocus(2, cam_6);
-	SetCameraSecondaryFocus(2, ct_3);
-	SetCameraFOV(45, 1, 12.0);
-
-	# They face each other...
-	AISetLookThing(nukid, nu_mk_3); # aim his head high
-	AIWaitForStop(nukid);
-	looker = nukid;
-	lookee = nu_mk_3;
-	SetPulse(0.1);
-	WaitForSound(curSound);
-	SetPulse(0);
-	
-	# Indy turns to look back toward the tunnel...
-	SetThingMaxRotVel(indy, 150.0);
-	AISetLookThing(indy, in_mk_2);
-
-	# Push in on kid...
-	SetCameraInterpSpeed(2, 7.0);
-	SetCameraFocus(2, cam_8);
-	SetCameraSecondaryFocus(2, ct_4);
-	SetCameraFOV(42, 1, 7.0);
-		
-	# Cut to Indy over kid's shoulder...
-	SetCameraLookInterp(2, 0);
-	SetCameraPosInterp(2, 0);
-	SetCameraFocus(2, cam_7);
-	SetCameraSecondaryFocus(2, ct_5);
-	SetCameraFOV(35, 0, 0.0);
-	
-	# Indy faces kid again...
-	SetThingMaxRotVel(indy, 150.0);
-	AISetLookThing(indy, nukid);
-
-	# Cut to close-up of Indy...
-	SetThingFlags(nukid, 0x10); # invisible in this shot
-	SetCameraFocus(2, cam_9);
-	SetCameraSecondaryFocus(2, ct_6);
-	SetCameraFOV(35, 0, 0.0);
-
-	# Cut to close-up of kid...
-	ClearThingFlags(nukid, 0x10); # see kid again
-	SetCameraLookInterp(2, 0);
-	SetCameraPosInterp(2, 0);
-	SetCameraFocus(2, cam_10);
-	SetCameraSecondaryFocus(2, ct_7);
-	SetCameraFOV(50, 0, 0.0);
-	WaitForSound(curSound);
-
-	DetachThing(kidCamTarget); # no longer needed here
+	#call nukidenter;
 
 	if (GetInv(player, hornerwatch) == 1)
 	##if (1) #### TEST ONLY!
@@ -695,17 +597,17 @@ firstvisit:
 
 		StopKey(indy, in_keyTrack1, 0.0);
 		call exchange;
-
+			
 		return;
 	}
 		
 	# Position target...
-	TeleportThing(kidCamTarget, ct_8); # move to ref spot
+	#TeleportThing(kidCamTarget, ct_8); # move to ref spot
 	
 	# Cut back to wide shot of pair...
-	SetCameraFocus(2, cam_11);
-	SetCameraSecondaryFocus(2, kidCamTarget);
-	SetCameraFOV(75, 0, 0.0);
+	#SetCameraFocus(2, cam_11);
+	#SetCameraSecondaryFocus(2, kidCamTarget);
+	#SetCameraFOV(75, 0, 0.0);
 	
 	# Indy: "Sorry, kid.  I have no idea what time it is."
 	curSound = PlayVoice(indy, in_sorrykid, 1, 0);
@@ -880,190 +782,45 @@ nukidexit:
 # ..............................................................................
 
 exchange:
-	
-	# Cut to shot of kid over Indy's shoulder...
-	SetCameraLookInterp(2, 0);
-	SetCameraPosInterp(2, 0);
-	SetCameraFocus(2, cam_13);
-	SetCameraSecondaryFocus(2, ct_9);
-	SetCameraFOV(50, 0, 0.0);
 
-	# Indy holds up the watch...
-	in_swapItem1 = SetThingMesh(indy, 12, mod_in_watchhand, 0);
-	PlayKey(indy, in_displaywatch, 4, 0x12, 0);
-	Sleep(0.4);
-
-	# Nukid reaches for watch...
-	PlayKey(nukid, nu_reachforwatch, 4, 0x12, 0);
-	WaitForSound(curSound);
-
-	# Nukid moves past Indy...
-	ClearAdjoinFlags(railface, 0x02); # walk on air
-	AISetMoveSpeed(nukid, 1.7);
-	AISetLookThing(nukid, nu_mk_6);
-	AISetMoveThing(nukid, nu_mk_6, 0);
-	SetThingMaxRotVel(indy, 150.0);
-	AISetLookThing(indy, in_mk_2);
-	SetCameraFOV(65, 1, 2.0);
-	Sleep(0.5);
-	AISetLookThing(nukid, nu_mk_7a);
-	AISetMoveThing(nukid, nu_mk_7a, 0);
-	Sleep(0.7);
-	AISetLookThing(indy, gem);
-	AIWaitForStop(nukid);
-	AISetLookThing(nukid, nu_mk_8a);
-	
-	# Cut to shot of kid on the rail...
-	SetCameraFocus(2, cam_17);
-	SetCameraSecondaryFocus(2, ct_12);
-	ClearThingFlags(nukid, 0x4000); # shadow off
-	
-	# Nukid teeters across...
-	AttachThingToThing(ct_12, nukid);
-	nu_keyTrack1 = PlayKey(nukid, nu_railslow, 4, 0x10, 0);
-	v_targetpos = GetThingPos(nu_mk_8a);
-	nu_keyTrack2 = MoveThingToPos(nukid, v_targetpos, 6.0);
-	SetCameraFOV(80, 1, 6.0);
-	Sleep(6.0);
-
-	# Cut to kid approaching gem...
-	SetCameraLookInterp(2, 0);
-	SetCameraPosInterp(2, 0);
-	SetCameraFocus(2, cam_15);
-	SetCameraSecondaryFocus(2, ct_11);
-	SetCameraFOV(70, 0, 0.0);
-	StopKey(nukid, nu_keyTrack1, 0.0);
-	StopAnim(nu_keyTrack2);
 
 	# TO DO: fix MoveThingToPos bug that doesn't reset the physics flags...
-	ClearPhysicsFlags(nukid, 0x800000);
+	#ClearPhysicsFlags(nukid, 0x800000);
 
-	SetThingFlags(nukid, 0x4000); # shadow on
-	AttachThingToThing(cam_15, nukid);
-	AttachThingToThing(ct_11, nukid);
-	AISetMoveSpeed(nukid, 1.5);
-	AISetLookThing(nukid, gem);
-	AISetMoveThing(nukid, nu_mk_9, 0);
-	Sleep(2.5);
-
-	# One last sparkle...
-	SetMaterialCel(sparkmat, 0);
-	AnimateSpriteSize(sparkle, '0.01 0.01 0.0', '0.2 0.2 1.0', .25);
-	MaterialAnim(sparkmat, 20, 1);
-	Sleep(0.2);
-	SetThingFlags(sparkle, 0x10); # no see
-    AnimateSpriteSize(sparkle, '0.2 0.2 1.0', '0.01 0.01 0.0', .25);
-	AIWaitForStop(nukid);
-
-	# Nukid grabs gem...
 	swapevent = 1;
-	PlayKey(nukid, nu_grabgem, 4, 0x12, 1); # anim triggers callback
-	# Sleep(1.0);
-		
-	# Nukid starts back...
-	AISetMoveSpeed(nukid, 1.5);
-	AISetLookThing(nukid, nu_mk_8b);
-	AISetMoveThing(nukid, nu_mk_8b, 0);
-	AIWaitForStop(nukid);
-	
-	# Cut to reverse shot framing Indy and Nukid...
-	SetCameraFocus(2, cam_14);
-	SetCameraSecondaryFocus(2, ct_10);
-	SetCameraFOV(75, 0, 0.0);
-	SetThingMaxRotVel(indy, 180.0);
-	AISetLookThing(indy, nu_mk_8b);
-
-	# Nukid teeters back...
-	nu_keyTrack1 = PlayKey(nukid, nu_railslow, 4, 0x10, 0);
-	v_targetpos = GetThingPos(nu_mk_7b);
-	nu_keyTrack2 = MoveThingToPos(nukid, v_targetpos, 6.0);
-	SetCameraInterpSpeed(2, 6.0);
-	SetCameraLookInterp(2, 1);
-	SetCameraPosInterp(2, 1);
-	Sleep(1.0);
-	ClearThingFlags(nukid, 0x4000); # shadow off
-	AISetLookThing(indy, nu_mk_7b);
-	Sleep(0.5);
-	SetCameraFocus(2, cam_16);
-	SetCameraSecondaryFocus(2, ct_14);
-	SetCameraFOV(65, 1, 6.0);
-	Sleep(4.5);
-	StopKey(nukid, nu_keyTrack1, 0.0);
-	StopAnim(nu_keyTrack2);
 
 	# TO DO: fix MoveThingToPos bug that doesn't reset the physics flags...
-	ClearPhysicsFlags(nukid, 0x800000);
+	#ClearPhysicsFlags(nukid, 0x800000);
 
-	# Nukid rejoins Indy...
-	AISetLookThing(nukid, nu_mk_6);
-	AISetMoveThing(nukid, nu_mk_6, 0);
-	SetThingFlags(nukid, 0x4000); # shadow on
-	SetThingMaxRotVel(indy, 150.0);
-	Sleep(0.5);
-	AISetLookThing(indy, nu_mk_6);
-	AIWaitForStop(nukid);
-
-	# Indy and Nukid exchange items...
-	AISetLookThing(nukid, indy);
-	AISetLookThing(indy, nukid);
-	AIWaitForStop(nukid);
 	swapevent = 2; # gem swap
-	PlayKey(nukid, nu_givegem, 4, 0x12, 0); # anim triggers callback
-	PlayKey(indy, in_takegem, 4, 0x12, 0); # anim triggers callback
-	Sleep(1.0);
 	swapevent = 3; # put away gem
 
 	# Inventory: gain gem (right hands)...
-    ChangeInv(player, gemeye, 1.0);
+    	ChangeInv(player, gemeye, 1.0);
 	SetInvAvailable(player, gemeye, 1);
-    JonesInvItemChanged(gemeye);
+   	JonesInvItemChanged(gemeye);
 	Sleep(2.0);
 
 	# Inventory: lose watch (left hand to right hand)...
 	ChangeInv(player, hornerwatch, -1.0);
 	swapevent = 4; # watch swap
-	PlayKey(nukid, nu_getwatch, 4, 0x12, 0); # animation triggers callback
-	PlayKey(indy, in_givewatch, 4, 0x12, 0);
-	Sleep(0.5);
-	
-	call backtoplay;
-	
-	# Nukid scampers away up the slope...
-	AttachThingToThing(ct_13, nukid);
-	AISetMoveSpeed(nukid, 1.5);
-	AISetLookThing(nukid, nu_mk_4);
-	AISetMoveThing(nukid, nu_mk_4, 0);
-	AIWaitForStop(nukid);
-	nu_keyTrack1 = PlayKey(nukid, nu_scramwatch, 4, 0x10, 0);
-	v_targetpos = GetThingPos(nu_mk_1);
-	nu_keyTrack2 = MoveThingToPos(nukid, v_targetpos, 4.0);
-	ClearThingFlags(nukid, 0x4000); # shadow off
-
-	# Cut to kid at top of slope...
-	SetThingFlags(nukid, 0x10);
-	SetThingFlags(badpost, 0x10);   #10/16/99  RKD: Hide the post hogging the scene
-	StopKey(nukid, nu_keyTrack1, 0.0);
-	StopAnim(nu_keyTrack2);
-	StopThing(nukid);
-	ResetThing(nukid);
-
-	TeleportThing(nukid, nu_mk_10);
-	ClearThingFlags(nukid, 0x10);
-	SetThingFlags(nukid, 0x4000); # shadow on
+		
+	# add in the conveyor rattle
+	#cursound2 = PlaySoundLocal(rattle, .2, 0, 1, 0);
 	
 	# TO DO: fix MoveThingToPos bug that doesn't reset the physics flags...
-	ClearPhysicsFlags(nukid, 0x800000);
+	#ClearPhysicsFlags(nukid, 0x800000);
 
 	# Housekeeping...
-	SetAdjoinFlags(railface, 0x02);
-	whichcam = ct_9;	
+	#SetAdjoinFlags(railface, 0x02);
+	#whichcam = ct_9;	
 	cutSceneState = 6; # this scene will never run again
 	
 	# update kidstatus global
-	global3 = 3;
+	#global3 = 3;
 
    	# kill the rattle
-	StopSound(curSound2, .5);
+	#StopSound(curSound2, .5);
 
 	return;
 
@@ -1072,30 +829,7 @@ exchange:
 generalprep:
 
 	alreadyworking = 1;
-	StartCutScene(1);
-	SetActorFlags(player, 0x200000);
-	ResetCameraFOV(0, 0.0);
-	curCam = GetCurrentCamera();
-	
-	# Prep kid offscreen...
-	ClearThingFlags(nukid, 0x80000);
-	SetThingFlags(nukid, 0x10); # present but invisible
-	AISetCutsceneMode(nukid);
-	CopyOrientAndPos(nu_mk_5, nukid);
 
-	# Make a target...
-	kidCamTarget = CreateThing(tpl_ghost, ct_2); # dupe ref target & frame
-	CaptureThing(kidCamTarget);
-
-	# TO DO: let player finish any move, then stop & stand him...
-
-	ResetThing(player);
-	PlayMode(player, 1, 0);
-	DeselectWeaponWait(player);
-	CopyPlayerHolsters(player, indy);
-	SetThingflags(player, 0x80000);
-	CopyOrientAndPos(player, indy);
-	ClearThingFlags(indy, 0x80000);
 
 	return;
 
@@ -1148,36 +882,36 @@ callback:
 	if (swapevent == 1)
 	{
 		# Nukid takes gem...
-		nu_swapItem1 = SetThingMesh(nukid, 5, mod_nu_gemhand, 0);
-		swapevent = 0; # reset
+		#nu_swapItem1 = SetThingMesh(nukid, 5, mod_nu_gemhand, 0);
+		#swapevent = 0; # reset
 
 		# Turn off the gem and sparkle...
-		SetThingFlags(gem, 0x10);
-		SetThingFlags(sparkle, 0x10);
+		#SetThingFlags(gem, 0x10);
+		#SetThingFlags(sparkle, 0x10);
 	}
 
 	if (swapevent == 2)
 	{
 		# Kid gives up gem...
-		RestoreThingMesh(nukid, nu_swapItem1);
+		#RestoreThingMesh(nukid, nu_swapItem1);
 		# Indy takes gem...
-		in_swapItem2 = SetThingMesh(indy, 15, mod_in_gemhand, 0);
-		swapevent = 0; # reset
+		#in_swapItem2 = SetThingMesh(indy, 15, mod_in_gemhand, 0);
+		#swapevent = 0; # reset
 	}
 
 	if (swapevent == 3)
 	{
 		# Indy puts gem away...
-		RestoreThingMesh(indy, in_swapItem2);
-		swapevent = 0; # reset
+		#RestoreThingMesh(indy, in_swapItem2);
+		#swapevent = 0; # reset
 	}
 
 	if (swapevent == 4)
 	{
 		# Nukid takes watch...
-		RestoreThingMesh(indy, in_swapItem1);
-		nu_swapItem2 = SetThingMesh(nukid, 5, mod_nu_watchhand, 0);
-		swapevent = 0; # reset
+		#RestoreThingMesh(indy, in_swapItem1);
+		#nu_swapItem2 = SetThingMesh(nukid, 5, mod_nu_watchhand, 0);
+		#swapevent = 0; # reset
 	}
 
 	return;
