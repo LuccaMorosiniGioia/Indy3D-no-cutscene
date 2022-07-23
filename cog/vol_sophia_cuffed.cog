@@ -708,8 +708,6 @@ freedom:
 	DestroyThing(sophia); # don't let Indy meet her by mistake
 	DestroyThing(thingCamTarget);
 	SendMessage(bridgecog, user0);
-	
-	Sleep(2.0);
 
 	# Return control to player...
 	EndCutScene();
