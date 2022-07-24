@@ -297,7 +297,7 @@ activated:                 // If player activates block
 
 		#MovetoFrame(switch, 0, .5);
 
-    		SetThingFlags(indy, 0x80000);
+    	SetThingFlags(indy, 0x80000);
 		ClearThingFlags(player, 0x80000);
 		ClearActorFlags(player, 0x200000);
 		SetCameraLookInterp(2, 0);
@@ -314,7 +314,6 @@ If (bridgeout == 0)		# collapse the bridge segments
 	# cut to camera at walkway segments
 	#SetPulse(0.05);	# a little screenshake
 	PlaySoundLocal(stress, 8, 1, 0x0, 0);
-	Sleep(1.0);
 	PlaySoundLocal(breakway, 0.75, 1, 0x0, 0);
 	
 	#MovetoFrame(walkway0, 3, 8);
@@ -325,34 +324,19 @@ If (bridgeout == 0)		# collapse the bridge segments
 	
     DestroyThing(walkway0);
 	
-	Sleep(0.25);
+	Sleep(0.1);
 	CreateThing(fallwalkD, debspot4);
 	CreateThing(fallwalkE, debspot5);
 	
 	DestroyThing(walkway1);
 
 	
-    Sleep(0.25);
+    Sleep(0.1);
 	CreateThing(fallwalkF, debspot6);
 	DestroyThing(walkway2);
-	
-	Sleep(1.5);
-	CreateThing(invis_shot, flamespot);
-	Sleep(0.5);
-	CreateThing(invis_shot, flamespot);
-	CreateThing(invis_shot, flamespot);
-	Sleep(0.25);
-	CreateThing(invis_shot, flamespot);
-	Sleep(0.25);
-	CreateThing(invis_shot, flamespot);
-	Sleep(1.5);
 
 	
     }
-		
-		# sound fx
-		PlaySoundLocal(ancientdevice, 1.0, 0, 0x0, 0);
-		Sleep(4.5);
         
 		# begin screenshake and move blocks
 		#SetPulse(.1);
@@ -363,7 +347,6 @@ If (bridgeout == 0)		# collapse the bridge segments
 		CopyOrientAndPos(lava_leftPos, lava_left);
 		CopyOrientAndPos(lava_rightPos, lava_right);
 
-		Sleep(1.0);
 		# show lava_chan and move it to "full" position
         ClearThingFlags(lava_chan, 0x10);
 		MoveToFrame(lava_chan, 0, 0.2);
@@ -418,7 +401,6 @@ If (bridgeout == 0)		# collapse the bridge segments
         # actor hits the switch
 		PlayKey(indy, inReach, 4, 0x12, 0);
 		MovetoFrame(switch, 1, .5);
-		Sleep(1.0);
 
 		MovetoFrame(switch, 0, .5);
 
@@ -433,10 +415,6 @@ If (bridgeout == 0)		# collapse the bridge segments
 		SetCameraFocus(2, camPos);
 		SetPulse(0.0);
 		
-		# sound fx
-        PlaySoundLocal(ancientdevice, 1.0, 0, 0x0, 0);
-		
-		Sleep(4.5);
         
 		# screenshake begins
 		#SetPulse(.1);
@@ -464,7 +442,6 @@ If (bridgeout == 0)		# collapse the bridge segments
 		MovetoFrame(block1, 0, 1.1);
 		MovetoFrame(block0, 0, 1.1);
 
-        Sleep(1.5);
 		
 		# show pushblocks, hide slabs
 		ClearThingFlags(puzzleblock0, 0x80000);
@@ -475,7 +452,6 @@ If (bridgeout == 0)		# collapse the bridge segments
 		SetCollideType(puzzleslab0, 0);
 		SetCollideType(puzzleslab1, 0);
 		
-		sleep(.5);
 		Call returncam;
         # reset the position of the lava_chan
 		SetThingFlags(lava_chan, 0x10);
@@ -586,7 +562,6 @@ arrived:
 	Rotate(lava_left, -90, 2, 2.5);
     Rotate(lava_right, 90, 2, 2.5);
     
-	Sleep(2.5);
     
 	#	change floor surfaces to lava
 		for (i = 0; i <=11; i = i + 1)
@@ -606,7 +581,6 @@ arrived:
 	CopyOrientAndPos(lava_leftPos, lava_left);
 	CopyOrientAndPos(lava_rightPos, lava_right);
 	
-	Sleep(0.75);
 	Call returncam;
 	}
 

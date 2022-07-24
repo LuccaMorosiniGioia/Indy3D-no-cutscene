@@ -233,31 +233,13 @@ entered:
 	
 		# music cue alludes to russian presence
         cursound3 = PlaySoundLocal(russ_cue, 1.0, 1, 0x0, 0);
-
-		
-	
-		# Handle the right props...
-		curWeapon = GetCurWeapon(player);
-		if (curWeapon != lighterweapon)
-		{
-			SelectWeapon(player, lighterweapon);
-		}
 				
 		# Indy: "Whoa.  Looks like the commies got here first."
 		PlayVoice(player, in_commies, 1.0, 1); # 2.7s
 
 		# Wrestle assets...
 		ClearThingFlags(sophia, 0x80000);
-		
-		# Restore player-chosen props...
-		if (curWeapon == 0)
-		{
-			DeselectWeaponWait(player);
-		}
-		else if (curWeapon != lighterweapon)
-		{
-			SelectWeapon(player, curWeapon);
-		}
+
 		# Mood music!
 		#PlaySoundLocal(sophia_cue, 1.0, 1, 0x0, 0); 
 
@@ -278,14 +260,11 @@ entered:
 		#PlayKey(sophia, so_kickladder, 4, 0x12, 0);
 		PlayKey(ladder, unroll, 4, 0x14, 0);
 		PlaySoundLocal(ladderunroll, 1, 0, 0x0, 0);
-		Sleep(0.5);
-
  		
 		MoveToFrame(ct_2, 1, 2.5); # num is rate
 
 		# Indy: "Sophia..."	
 		PlayVoice(indy, in_sophia, 1.0, 0);
-		Sleep(1.0);
 
 		# Make the ladder climbable...
 		SetSurfaceFlags(ladderface_1, 0x2000);
