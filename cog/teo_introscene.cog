@@ -203,8 +203,8 @@ entered:
         CaptureThing(player);
 		SetThingFlags(player, 0x4000); # shadow on
         bnosound = 1;
-        Sleep(1.0);
-		WaitForSound(cursound);
+        #Sleep(1.0);
+		#WaitForSound(cursound);
 	    enterflag = 1;
         SetTimer(2.5);
 	}

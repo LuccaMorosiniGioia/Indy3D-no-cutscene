@@ -174,7 +174,6 @@ MAKEITGO:
 	
 	# take bucket out of inventory, pause
 	ChangeInv(player, 117, -1);
-	sleep(1);
 	
 	#play actor anim to push bucket
 	PlayMode(indyactor, 61, 0);

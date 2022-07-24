@@ -128,7 +128,6 @@ activated:
 		gotten=1;
 		StartCutscene(1);
 		SetActorFlags(player, 0x200000);
-		MakeMeStop();
 		DeselectWeaponWait(player);
 		aha = PlayVoice(player, ahasnd, 1.0, 0);
 

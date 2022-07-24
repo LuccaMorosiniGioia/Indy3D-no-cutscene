@@ -303,13 +303,13 @@ entered:
 
 		AISetLookThingEyeLevel(volod, vo_mk_4);
 		AISetMoveThing(volod, vo_mk_4, 0);
-		Sleep(2.5);
+		Sleep(1.0);
 	PlaySoundLocal(music1, 1.0, 0.0, 0x0, 0);
 
 		# Bridge door closes...
 		Sleep(0.5);
 		call closedoor;
-		Sleep(1.5);
+		Sleep(0.5);
 
 		# Restore ship doors...
 		ClearAdjoinFlags(hallthold1, 0x02);
@@ -341,7 +341,6 @@ entered:
 		AIEnableHeadTracking(indy, cam_5);
 		AIClearCutSceneMode(volod);
 		DestroyThing(volod);
-		Sleep(1.0); # adjust
 
 		SetThingMaxHeadVel(indy, in_headRate);
 
