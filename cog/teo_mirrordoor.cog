@@ -202,8 +202,7 @@ user0:
         {
             ThingFadeAnim(shaft1[count], 1, 0, 0.1, 0);
         }
-    StopKey(actorindy, in_track0, 0.5);          
-    WaitForStop(door0);
+    StopKey(actorindy, in_track0, 0.5);
     StopSound(doorchan_slide, 0);
     PlaySoundThing(doorstop, door0, 1, 10, 20, 0);
     SetCameraLookInterp(2, 0);

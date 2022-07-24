@@ -201,8 +201,8 @@ activate:
         AttachThingToThing(jagnewidol, jagstand);
         PlaySoundThing(idolplacesound, jagnewidol, 1, 10, 20, 0x0080);
         SetThingLight(jagnewidol, '0 1 0', 0.05, 0.5);
-        Sleep(1);
-	SetCameraFOV(90, 0 ,0);
+        #Sleep(1);
+		SetCameraFOV(90, 0 ,0);
         SetCurrentCamera(1);
         EndCutScene();
         ClearActorFlags(player, 0x200000);
@@ -244,9 +244,9 @@ activate:
         PlaySoundThing(idolplacesound, birdnewidol, 1, 10, 20, 0x0080);
         SetThingLight(birdnewidol, '1 1 0', 0.05, 0.5);
         ChangeInv(player, 74, -1);
-        Sleep(1);
+        #Sleep(1);
 
-	SetCurrentCamera(1);
+		SetCurrentCamera(1);
         SetCameraFOV(90, 0, 0);
         EndCutScene();
         ClearActorFlags(player, 0x200000);
@@ -288,9 +288,9 @@ activate:
         PlaySoundThing(idolplacesound, fishnewidol, 1, 10, 20, 0x0080);
         SetThingLight(fishnewidol, '0 0 1', 0.05, 0.5);
         ChangeInv(player, 75, -1);
-        Sleep(1);
+        #Sleep(1);
 
-	SetCurrentCamera(1);
+		SetCurrentCamera(1);
         SetCameraFOV(90, 0, 0);
         EndCutScene();
         ClearActorFlags(player, 0x200000);
@@ -339,7 +339,7 @@ SetCollideType(column, 3);
         StopSound(statchannel, 0.0);
         RotateToPYR(statue, resetvec, 1);
         RotateToPYR(gear, resetvec, 1);
-        Sleep(1);
+        #Sleep(1);
         SetCollideType(statue, 3);
 
 		SetThingCollideSize(statue, 0.17); # was 0.15 new HB
