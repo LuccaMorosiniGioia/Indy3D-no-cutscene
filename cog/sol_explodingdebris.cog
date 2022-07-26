@@ -268,7 +268,7 @@ damaged:
         CreateThing(tplSnake1, ghostSnake5);
         
         # Create second wave of snakes
-        Sleep(2.0);
+        # Sleep(2.0);
         CreateThing(tplSnake1, ghostSnake1);
         CreateThing(tplSnake2, ghostSnake2);
         

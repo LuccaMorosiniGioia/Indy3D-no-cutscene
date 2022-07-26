@@ -149,7 +149,8 @@ playcut:
     
     # open the door
     Rotate(door, -90, 1, 2.0);
-    WaitForStop(door);
+    # WaitForStop(door);
+	Sleep(1.5);
     
     # walk actor to the levers
     #AISetMoveSpeed(indy, 1.0);

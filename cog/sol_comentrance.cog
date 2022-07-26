@@ -200,7 +200,7 @@ entered:
         else if(GetSenderRef() == er_Indy_Trig1)
         {
             # slow down player
-            SetThingThrust(player, '0.0 2.0 0.0');
+            # SetThingThrust(player, '0.0 2.0 0.0');
             
             # Cut to er_cam2
             #SetCameraFocus(2, er_cam2);
