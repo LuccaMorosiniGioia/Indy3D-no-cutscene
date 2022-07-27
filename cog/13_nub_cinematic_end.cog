@@ -1,0 +1,443 @@
+# Jones 3D Cog Script
+#
+# 13_NUB_Cinematic_End.cog
+#
+# Indy loses the machine parts to Turner
+#
+# [HB] [GGJ]  All changes by GGJ include initials.
+#
+# (C) 1999 LucasArts Entertainment Company LLC. All Rights Reserved
+#
+# ==============================================================================
+
+symbols
+
+# .................................. MESSAGES ..................................
+
+	message		startup
+	message		entered
+	message		callback
+	message		pulse
+	
+# .................................. KEYFRAMES .................................
+	
+	keyframe	in_armsCrossed=0in_stand2.key			local
+	keyframe	in_handsONhips=0in_stand4.key			local
+	keyframe	in_crossArms=0in_stand1_bd_2.key	   	local
+	keyframe	in_handsTOhips=0in_stand1_bd_4.key	   	local
+	keyframe	in_botharmsup=0in_armsup_1_1.key		local
+	keyframe	in_think=0in_thinking_4_4.key			local
+
+	keyframe	in_stand7=0in_stand7.key				local
+	keyframe	in_stand8=0in_stand8.key				local
+	keyframe	in_stand9=0in_stand9.key			   	local
+	keyframe	in_7_bd_8=0in_stand7_bd_8.key			local
+	keyframe	in_8_bd_7=0in_stand8_bd_7.key			local
+	keyframe	in_8_bd_9=0in_stand8_bd_9.key			local
+	keyframe	in_turnRT=0in_turnright_9_1.key			local
+	keyframe	in_pushhat9=0in_figithat_9_9.key		local
+	keyframe	in_handoverparts=0in_givepart_8_8.key	local
+	keyframe	in_climbladder=0in_climblad.key			local
+	keyframe	in_pullimps=0in_key_pull_1_hold.key		local
+
+	keyframe	so_crouch=0so_stand7.key				local
+	keyframe	so_crawl=0so_crawl_bd_7.key				local
+	keyframe	so_creach=0so_reach_7.key				local
+	keyframe	so_dropladder=0so_droplad_7_2.key		local
+
+	keyframe	tu_crouch=0tu_stand4.key				local
+	keyframe	tu_crouchdown=0tu_stand3_bd_4.key		local
+	keyframe	tu_creach=0tu_righthnd_4_4.key			local
+	keyframe	tu_takeparts=0tu_stand4_bd_5.key		local
+	keyframe	tu_standup=0tu_stand4_bd_3.key			local
+	
+	keyframe	vo_armsATback=vo_stand2_arms_back.key	local
+	keyframe	vo_armsATfold=vo_stand1_arms_front.key	local
+
+	keyframe	vo_cleanglasses=0vo_glasses_2_2.key		local # mks@61&180/cb16
+	keyframe	vo_leftup2=0vo_leftup_2_1.key			local
+	keyframe	vo_leftup3=0vo_leftup_3_3.key			local
+	keyframe	vo_bothup=0vo_bothup_3_3.key			local
+
+	keyframe	vo_GunPull=0vo_gun_pull.key				local 
+	keyframe	vo_stand4=0vo_stand4.key				local
+	keyframe	vo_damarduk=0vo_damardukhimself_3_2.key	local
+	keyframe	vo_Gangster=0vo_friendgangster_4_4.key	local
+	keyframe	vo_GunPut=0vo_gun_put.key				local # mk@19x/cb16
+	keyframe	vo_iKnow=0vo_andiknow_3.key				local
+
+	keyframe	vo_SSSR=0vo_socialistrepublic_3_4.key	local
+    
+	keyframe	ldr_folded=0lad_sitedge.key				local
+	keyframe	ldr_fall=0lad_drop1.key					local
+	
+# .................................. MODELS ....................................
+		
+	model  		mod_in_imps=hand_in_impbundle.3do		local
+	model  		mod_tu_imps=hand_tu_impbundle.3do		local
+	model  		mod_vo_gun=weap_tokarev.3do				local
+	model  		mod_vo_holster=holster_vo_notok.3do		local
+	model  		mod_vo_head=head_vo_noglasses.3do		local
+	model  		mod_vo_glasses=hand_vo_glasses.3do		local
+			
+# .................................. SOUNDS ....................................
+
+	sound		in_ow=Inxj017a.wav						local
+#	sound		in_oww=Inxj017g.wav						local
+#	sound		in_unnh=Inxj018a.wav					local
+
+	sound		so_indyisyou=Nb09s01.wav				local
+	sound		in_moreless=Nb09j02.wav					local
+	sound		so_allright=Nb09s03.wav					local
+	sound		in_hurtlive=Nb09j04.wav					local
+	sound		so_ogood=Nb09s05.wav					local
+	sound		so_handparts=Nb09s06.wav				local
+	sound		so_indy=Nb09s07.wav						local
+	sound		in_whoswe=Nb09j08.wav					local
+	sound		tu_comejones=Nb09t09.wav				local
+	sound		in_idunno=Nb09j10.wav					local
+	sound		tu_lovecountry=Nb09t11.wav				local
+	sound		vo_notrustam=Nb09v12.wav				local
+	sound		vo_incccpname=Nb09v13.wav				local
+	sound		tu_giveparts=Nb09t14.wav				local
+	sound		vo_partsafeme=Nb09v15.wav				local
+	sound		in_whatchoice=Nb09j16.wav				local
+	sound		so_sorryindy=Nb09s17a.wav				local	#GGJ  added "a"
+	sound		so_andthanx=Nb09s17b.wav				local
+	sound		vo_drooglives=Nb09v18.wav				local
+	sound		in_cheersmeup=Nb09j19.wav				local
+	sound		vo_babelturmoil=Nb09v20.wav				local
+	sound		in_yammer=Nb09j21.wav					local
+	sound		vo_mardukrevenge=Nb09v22.wav			local
+	sound		vo_luckyprofs=Nb09v23.wav				local
+	sound		vo_tootimid=Nb09v24.wav					local
+	sound		vo_backtobooks=Nb09v25.wav				local
+	
+	sound		slabRumbleSnd=pru_boulder_rolling_c.wav	local	#GGJ
+	sound		slabStartSnd=nub_stonedoor_start_c.wav	local	#GGJ
+	sound		slabStopSnd=pru_trapblock_stuck_c.wav	local	#GGJ
+	sound		ladderDropSnd=vol_ropeladder_throw.wav	local	#GGJ
+	sound		partMus=mus_nub_turnerparts.wav			local	#GGJ
+	sound		windSnd=gen_wind07.wav					local	#GGJ
+	sound		bagSnd=gen_bazooka_pull.wav				local	#GGJ
+
+# ............................... ACTOR THINGS .................................
+
+	thing		player									local
+	thing		indy	    							linkid=0
+	thing		sophia
+	thing		turner
+	thing		volod
+
+# .............................. OBJECT THINGS .................................
+
+	thing		trapdoor_1										#GGJ-removed nolink
+	thing		trapdoor_2										#GGJ-removed nolink
+	thing		lightshaft								nolink
+	thing		ladder									nolink
+	thing		dynaLight										#GGJ
+	thing		dynaLight1										#GGJ
+	thing		dynaLight2										#GGJ
+
+# .............................. CAMERA THINGS .................................
+
+	thing		cam_1									nolink
+	thing		cam_2									nolink
+	thing		cam_3									nolink
+	thing		cam_4									nolink
+	thing		cam_5									nolink
+	thing		cam_6									nolink
+	thing		cam_7									nolink
+	thing		cam_8									nolink
+	thing		cam_9									nolink
+	thing		cam_10a									nolink
+	thing		cam_10b									nolink
+	thing		cam_10c									nolink
+	thing		cam_11									nolink
+	thing		cam_12									nolink
+
+	thing		ct_1									nolink
+	thing		ct_2									nolink
+	thing		ct_3 									nolink
+	thing		ct_4									nolink
+	thing		ct_5a									nolink
+	thing		ct_5b									nolink
+	thing		ct_5c									nolink
+	thing		ct_5d									nolink
+	thing		ct_6									nolink
+	thing		ct_7									nolink
+	thing		ct_8									nolink
+	thing		ct_9									nolink
+	thing		ct_10									nolink
+	thing		ct_11									nolink
+	thing		ct_12									nolink
+	thing		ct_13a									nolink
+	thing		ct_13b									nolink
+	thing		ct_14									nolink
+	thing		ct_15									nolink
+	thing		ct_16									nolink
+	thing		ct_17									nolink
+	thing		ct_18									nolink
+
+# .............................. TARGET THINGS .................................
+
+	thing		in_mk_1									nolink
+	thing		in_mk_2									nolink
+	thing		in_mk_3									nolink
+	thing		in_mk_4									nolink
+#	thing		in_mk_5									nolink
+#	thing		in_mk_6									nolink
+	thing		in_mk_7									nolink
+
+#	thing		so_mk_1									nolink
+
+	thing		tu_mk_1									nolink
+
+	thing		vo_mk_1									nolink
+	thing		vo_mk_2									nolink
+
+# ............................... VAR THINGS ...................................
+
+#	thing		indyCamTarget							local # created on fly
+#	thing		kidCamTarget							local # created on fly
+#	thing		whichcam								local # var
+#	thing		entercam								local # var
+#	thing		looker									local # var
+#	thing		lookee									local # var
+	thing		fadeplate									  #GGJ
+
+# ........................ OTHER ENGINE REFERENCES .............................
+			
+	#cog			endcog									  # Removed GGJ
+    
+	surface		startface
+
+# ............................... VARIABLES ....................................
+	
+	vector		posOffset								local
+	vector		angOffset								local
+
+
+	vector		v_tpos									local
+	vector		v_ipos									local
+	vector		v_aim									local
+
+	flex		f_X										local
+	flex		f_Y										local
+
+	
+	flex		in_rotRate								local
+
+	flex		rumbleVol=0.35							local #GGJ		increased from .2 to .35 per DaveL
+	int			rumbleTrack								local #GGJ
+	int			windTrack								local #GGJ
+
+	int			cutSceneState=0							local # overall state var
+
+	int			in_collType								local
+	
+	int			in_keyTrack1							local
+	int			in_keyTrack2							local
+	int			so_keyTrack1							local
+	int			tu_keyTrack1							local
+	int			tu_keyTrack2							local
+	int			vo_keyTrack1							local
+	int			vo_keyTrack2							local
+	int			vo_gunTrack								local
+	int			ldr_keyTrack1							local
+
+	int			in_swapItem1							local
+	int			tu_swapItem1							local
+	int			vo_swapItem1							local
+	int			vo_swapItem2							local
+	int			swapevent=0								local
+			
+	int			curSound								local
+	int			curCam									local
+	int			vibe									local
+
+	int			imp_1=14								local # inventory define
+	int			imp_2=15								local # inventory define
+	int			imp_3=16								local # inventory define
+	int			imp_4=17								local # inventory define
+
+    
+end
+
+# ==============================================================================
+
+code
+
+# ..............................................................................
+
+startup:
+
+	# Pointer to Player...
+	player = GetLocalPlayerThing();
+
+	# Prep actors...
+	curCam = GetCurrentCamera();
+	SetThingFlags(indy, 0x80000);
+	SetThingFlags(sophia, 0x80000);
+	SetThingFlags(turner, 0x80000);
+	SetThingFlags(volod, 0x80000);
+	SetThingFlags(ladder, 0x80000);
+	AISetCutSceneMode(indy);
+	AISetCutSceneMode(sophia);
+	AISetCutSceneMode(turner);
+	AISetCutSceneMode(volod);
+	in_rotRate = GetThingMaxRotVel(indy);
+	in_collType = GetCollideType(indy);
+
+	# Prep set...
+	ClearThingFlags(lightshaft, 0x80000);
+	SetThingAlpha(lightshaft, 0.0);
+	SetCollideType(lightshaft, 0);
+	SetThingFlags(lightshaft, 0x80000);
+	SetCollideType(trapdoor_1, 0);
+	SetCollideType(trapdoor_2, 0);
+	SetThingAlpha(fadeplate, 0.0);
+	SetCollideType(fadePlate, 0);					#GGJ
+
+	return;
+
+# ..............................................................................
+
+entered:
+
+	if (cutSceneState != 0)
+	{
+		return;
+	}
+
+	# Prep...
+	ResetCameraFOV(0, 0.0);
+	cutSceneState = 1;
+	curCam = GetCurrentCamera();
+	in_collType = GetCollideType(indy);
+			
+	StartCutScene(1); # health meter should fade
+
+	SetActorFlags(player, 0x200000);
+	StopThing(player);
+	CopyPlayerHolsters(player, indy);
+	# Sleep(1.5); # wait for indy to stand up
+	SetThingflags(player, 0x80000);
+	ClearThingFlags(indy, 0x80000);
+	TeleportThing(indy, in_mk_1);
+
+	# Scour IMP's from inventory...
+	ChangeInv(player, imp_1, -1.0);
+	ChangeInv(player, imp_2, -1.0);
+	ChangeInv(player, imp_3, -1.0);
+	ChangeInv(player, imp_4, -1.0);
+
+
+	# TO DO: call endlevel cog...
+
+	EndCutScene();										# Added GGJ
+	JonesEndLevel();									# Added GGJ
+	
+	# Restore control (TEMP!!!)...
+#	ClearThingFlags(player, 0x80000);					# Removed GGJ
+#	SetCameraLookInterp(2, 0);							# Removed GGJ
+#	SetCameraPosInterp(2, 0);							# Removed GGJ
+#	SetCurrentCamera(curCam);							# Removed GGJ
+#	ResetCameraFOV(0, 0.0);								# Removed GGJ
+#	ClearActorFlags(player, 0x200000);					# Removed GGJ
+
+#	EndCutScene();										# Removed GGJ
+
+	return;
+
+# ..............................................................................
+
+callback:
+
+	if (swapevent == 1)
+	{
+		# Indy displays IMP's...
+		in_swapItem1 = SetThingMesh(indy, 15, mod_in_imps, 0);
+		swapevent = 0; # reset
+	}
+	
+	else if (swapevent == 2)
+	{
+		# Empty Indy's hand...
+		RestoreThingMesh(indy, in_swapItem1);
+
+		# Turner takes IMPs...
+		tu_swapItem1 = SetThingMesh(turner, 5, mod_tu_imps, 0);
+		swapevent = 0; # reset
+	}
+
+    else if (swapevent == 3)
+	{
+		# RT: Return gun to holster...
+		RestoreThingMesh(volod, vo_swapItem1);
+		RestoreThingMesh(volod, vo_swapItem2);
+		swapevent = 0; # reset
+	}
+
+	else if (swapevent == 4)
+	{
+		# Volodnikov removes his glasses...
+		vo_swapItem1 = SetThingMesh(volod, 2, mod_vo_head, 0); # no glasses head
+		vo_swapItem2 = SetThingMesh(volod, 8, mod_vo_glasses, 0); # hand with glasses
+
+		# RT: Set up alternate heads
+		SetThingVoiceHeads(volod, "vohead", "head_vo_noglasses.3do", "head_vo_nospecs_asound.3do", "head_vo_nospecs_amsound.3do", "head_vo_nospecs_osound.3do");
+
+		swapevent = 0; # reset
+	}
+	
+	else if (swapevent == 5)
+	{
+		# Volodnikov replaces his glasses...
+		RestoreThingMesh(volod, vo_swapItem1);
+		RestoreThingMesh(volod, vo_swapItem2);
+
+		# RT: Restore default heads
+		SetThingVoiceHeads(volod, "vohead", "head_vo_msound.3do", "head_vo_asound.3do", "head_vo_amsound.3do", "head_vo_osound.3do");
+		
+		swapevent = 0; # reset
+	}
+	
+	return;
+
+# ..............................................................................
+
+pulse:
+
+	rumbleVol = rumbleVol * 1.001;
+	#PrintFlex(rumblevol);
+	ChangeSoundVol(rumbleTrack, rumbleVol, 0.1);
+	#PrintInt(rumbletrack);
+   
+	vibe = RandBetween(1, 4);
+	if (vibe == 1)
+	{
+		posOffset = '-0.005 0.00 -0.002';
+		angOffset = '0.00 -0.002 0.002';
+	}
+	if (vibe == 2)
+	{
+		posOffset = '0.005 -0.005 0.002';
+		angOffset = '0.002 0.00 -0.002';
+	}
+	if (vibe == 3)
+	{
+		posOffset = '0.002 0.005 -0.005';
+		angOffset = '-0.002 0.002 -0.002';
+	}
+	if (vibe == 4)
+	{
+		posOffset = '-0.002 0.00 0.005';
+		angOffset = '0.00 0.00 0.002';
+	}
+
+	SetPOVShake(posOffSet, angOffSet, 200.0, 200.0);
+
+	return;
+
+end
