@@ -830,9 +830,9 @@ blueGem:
     Sleep(0.3);
     
     # show gem_Blue and light it
-    #ClearThingFlags(gem_Blue, 0x10);
-   # SetThingLight(gem_Blue, blue, 2.0, 0.1);
-    #PlaySoundLocal(snd_GemPlace, 1.0, 0.0, 0x0, 1);
+    ClearThingFlags(gem_Blue, 0x10);
+    SetThingLight(gem_Blue, blue, 2.0, 0.1);
+    PlaySoundLocal(snd_GemPlace, 1.0, 0.0, 0x0, 1);
     
     # say "That ought to do it"
     PlayVoice(player, in_Success3, 1.0, 0);
@@ -866,7 +866,7 @@ blueGem:
     MoveToFrame(pyramid, 3, 1.0);
     MoveToFrame(horusKey, 3, 1.0);
     MoveToFrame(pushed, 3, 1.0);
-    WaitForStop(pushed);
+    # WaitForStop(pushed);
 
     # move camera focus back to player
     #Sleep(0.5);

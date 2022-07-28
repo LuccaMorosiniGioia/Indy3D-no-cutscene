@@ -1,0 +1,66 @@
+# Jones 3D Cog Script
+#
+# nub_BowDoor.cog
+#
+# [TL] [GGJ]
+#
+# (C) 1999 LucasArts Entertainment Co. All Rights Reserved
+#
+# ========================================================================================
+symbols
+
+message	activated
+message	arrived
+
+thing	door
+thing	button
+thing	player			local
+thing	exitActor
+thing	exitCam
+thing	exitGhost
+
+keyframe	activate=in_activate_medium.key  		local
+
+sound	creak 
+sound	slam
+
+int		done=0			local
+
+end
+
+# ========================================================================================
+code
+
+activated:
+
+player = GetLocalPlayerThing();
+if (GetCurWeapon(player) != 0) return;
+if (done == 1) return;
+done=1;
+
+PlayKey(player, activate, 4, 0x12, 0);
+Sleep(0.75);
+
+MoveToFrame(button, 1, 1.0); 
+
+PlaySoundThing(creak, door, 1.0, -1.0, -1.0, 0x80);
+Sleep(0.5);
+
+Rotate(door, -90, 2, 0.5);
+PlaySoundThing(slam, door, 1.0, -1.0, -1.0, 0x80);
+
+return;
+
+# ........................................................................................
+arrived:
+
+#if ((GetSenderRef() == button) && (GetCurFrame(button) == 1))
+#{
+#	MoveToFrame(button, 0, 1.0);
+#}
+
+return;
+
+# ........................................................................................
+end
+
